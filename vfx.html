@@ -701,6 +701,28 @@
         "Page 38: Bohr Model"
       ];
 
+      const ALL_AUDIO_IDS = ['audio06', 'audio07', 'audio08', 'audio13', 'audio37', 'audio38'];
+
+      // Single-stream enforcement: guarantees only ONE audio or video ever plays at any time
+      function stopAllAudioExcept(exceptEl) {
+        ALL_AUDIO_IDS.forEach((id) => {
+          const a = document.getElementById(id);
+          if (a && a !== exceptEl) {
+            try {
+              a.pause();
+              a.currentTime = 0;
+            } catch (e) {}
+          }
+        });
+        const vid = document.getElementById('vid1');
+        if (vid && vid !== exceptEl) {
+          try {
+            vid.pause();
+            vid.currentTime = 0;
+          } catch (e) {}
+        }
+      }
+
       function updateAudioButtonUI(isPlaying) {
         if (!currentAudioTitle) currentAudioTitle = "Audiobook";
         if (isPlaying) {
@@ -840,30 +862,17 @@
           }, { once: true });
         }
 
-        // Mobile gesture unlock for media
-        ['vid1', 'audio06', 'audio07', 'audio08', 'audio13', 'audio37', 'audio38'].forEach((id) => {
-          const v = document.getElementById(id);
-          if (v) {
-            v.muted = true;
-            if (v.tagName.toLowerCase() === 'video') {
-              v.playsInline = true;
-              v.setAttribute('playsinline', '');
-              v.setAttribute('webkit-playsinline', '');
-            }
-            try {
-              let p = v.play();
-              if (p !== undefined) {
-                p.then(() => {
-                  if (v !== currentAudio || (currentAudio && currentAudio.paused)) {
-                    v.pause();
-                    v.currentTime = 0;
-                    v.muted = false;
-                  }
-                }).catch(() => {});
-              }
-            } catch (e) {}
-          }
-        });
+        // Ensure video is properly configured for inline playback without triggering unwanted autoplay
+        const vid1 = document.getElementById('vid1');
+        if (vid1) {
+          vid1.playsInline = true;
+          vid1.setAttribute('playsinline', '');
+          vid1.setAttribute('webkit-playsinline', '');
+          vid1.pause();
+        }
+
+        // Enforce strict silence on launch: ensure zero audio tracks play until a target is explicitly scanned & played
+        stopAllAudioExcept(null);
       };
 
       const activateStartButton = () => {
@@ -889,6 +898,7 @@
         if (!currentAudio) return;
 
         if (currentAudio.paused) {
+          stopAllAudioExcept(currentAudio);
           currentAudio.muted = false;
           currentAudio.play().then(() => {
             updateAudioButtonUI(true);
@@ -956,12 +966,10 @@
           // TARGET 4: PAGE 30 - Navier-Stokes VFX Motion Video Reveal
           // -------------------------------------------------------------
           if (i === 4) {
-            // Stop and pause any playing audiobook when pointing to the VFX page!
-            if (currentAudio) {
-              currentAudio.pause();
-              currentAudio.currentTime = 0;
-              updateAudioButtonUI(false);
-            }
+            // Stop and pause all audiobooks immediately when pointing to the VFX page!
+            stopAllAudioExcept(null);
+            currentAudio = null;
+            updateAudioButtonUI(false);
             audioControls.classList.remove('visible');
 
             // Show and play video overlay
@@ -992,7 +1000,7 @@
             vidOverlay.components['video-overlay'].hide();
           }
           const vidEl = document.getElementById('vid1');
-          if (vidEl) { vidEl.pause(); }
+          if (vidEl) { vidEl.pause(); vidEl.currentTime = 0; }
 
           const aOverlay = targetEntity.querySelector('[data-audio]');
           if (!aOverlay) return;
@@ -1002,6 +1010,9 @@
 
           const isNewPage = (currentAudioIndex !== i);
           const wasPlaying = (currentAudio && !currentAudio.paused);
+
+          // Guarantee single-stream playback: stop all audio except the newly targeted one
+          stopAllAudioExcept(newAudio);
 
           if (isNewPage) {
             // Stop previous audio if switching to a different page
