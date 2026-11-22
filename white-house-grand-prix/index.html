@@ -935,31 +935,312 @@
       to { opacity: 1; }
     }
 
-    /* Touch & Pointer Ergonomics for Phones, iPads & Tablets */
-    .touch-control-cluster {
+    /* ─── Modern Mobile Racing Controls (F1 / Console Layout matching User Reference) ─── */
+    .touch-control-deck {
       display: none;
+      position: absolute;
+      z-index: 60;
+      pointer-events: auto;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
     }
+
     @media (pointer: coarse), (hover: none), (max-width: 1024px) {
-      .touch-control-cluster {
+      .touch-control-deck {
         display: flex !important;
       }
       .desktop-key-hints {
         display: none !important;
       }
     }
+
+    /* Left Steering Deck */
+    .touch-left-deck {
+      bottom: max(16px, env(safe-area-inset-bottom));
+      left: max(16px, env(safe-area-inset-left));
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      background: rgba(9, 24, 17, 0.7);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(229, 211, 158, 0.35);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+    }
+
     .touch-btn {
       touch-action: none;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       -webkit-user-select: none;
-      transition: transform 0.08s ease, background-color 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+      transition: transform 0.06s ease, filter 0.08s ease;
+      cursor: pointer;
     }
-    .touch-btn.active-touch {
+
+    .touch-btn-steer {
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      background: rgba(20, 48, 33, 0.9);
+      border: 2.5px solid rgba(229, 211, 158, 0.55);
+      color: #f6f4e9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+    }
+
+    .touch-btn-steer.active-touch {
       transform: scale(0.92);
-      background: rgba(221, 200, 137, 0.92) !important;
-      color: #10251c !important;
-      border-color: #fff6d6 !important;
-      box-shadow: 0 0 20px rgba(221, 200, 137, 0.65);
+      background: #e5d39e !important;
+      color: #0b1a13 !important;
+      border-color: #fff !important;
+      box-shadow: 0 0 24px rgba(229, 211, 158, 0.9);
+    }
+
+    /* Right Driving Deck */
+    .touch-right-deck {
+      bottom: max(14px, env(safe-area-inset-bottom));
+      right: max(14px, env(safe-area-inset-right));
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+    }
+
+    .touch-row-top {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .touch-row-bottom {
+      display: flex;
+      gap: 14px;
+      align-items: flex-end;
+    }
+
+    /* Drift Button with golden glowing circular ring */
+    .touch-btn-drift {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(16, 42, 46, 0.9);
+      border: 2px solid rgba(251, 191, 36, 0.75);
+      color: #fbbf24;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 18px rgba(251, 191, 36, 0.4);
+    }
+
+    .touch-btn-drift.active-touch {
+      transform: scale(0.92);
+      background: #fbbf24 !important;
+      color: #0c1f16 !important;
+      box-shadow: 0 0 28px rgba(251, 191, 36, 0.95);
+    }
+
+    /* Boost / Nitro Button with cyan neon glow */
+    .touch-btn-boost {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: rgba(13, 37, 42, 0.92);
+      border: 2px solid rgba(128, 233, 244, 0.8);
+      color: #80e9f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(128, 233, 244, 0.45);
+    }
+
+    .touch-btn-boost.active-touch {
+      transform: scale(0.92);
+      background: #80e9f4 !important;
+      color: #081d22 !important;
+      box-shadow: 0 0 32px rgba(128, 233, 244, 0.95);
+    }
+
+    /* Brake Pedal Button */
+    .touch-btn-brake {
+      width: 64px;
+      height: 76px;
+      border-radius: 14px;
+      background: rgba(61, 25, 22, 0.92);
+      border: 2.5px solid rgba(252, 165, 165, 0.65);
+      color: #fecaca;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+    }
+
+    .touch-btn-brake.active-touch {
+      transform: scale(0.92);
+      background: #f87171 !important;
+      color: #2b0c0a !important;
+      box-shadow: 0 0 28px rgba(248, 113, 113, 0.9);
+    }
+
+    /* Gas / Accelerator Pedal Button */
+    .touch-btn-gas {
+      width: 72px;
+      height: 98px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(240, 218, 150, 0.96) 0%, rgba(181, 141, 61, 0.96) 100%);
+      border: 2.5px solid #fff9e6;
+      color: #14281d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 6px 26px rgba(200, 169, 110, 0.5);
+    }
+
+    .touch-btn-gas.active-touch {
+      transform: scale(0.92);
+      filter: brightness(1.25);
+      box-shadow: 0 0 34px rgba(240, 218, 150, 0.95);
+    }
+
+    .touch-sublabel {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 800;
+      font-size: 10.5px;
+      letter-spacing: 0.12em;
+      line-height: 1;
+    }
+
+    /* Pedal Traction Tread Ribs */
+    .pedal-ribs {
+      display: flex;
+      flex-direction: column;
+      gap: 3.5px;
+      align-items: center;
+      width: 65%;
+    }
+    .pedal-ribs span {
+      display: block;
+      width: 100%;
+      height: 3px;
+      background: currentColor;
+      border-radius: 2px;
+      opacity: 0.75;
+    }
+    .gas-ribs span {
+      height: 4px;
+      opacity: 0.88;
+    }
+
+    /* ─── Mandatory Horizontal Landscape Gate ─── */
+    .landscape-gate-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 99999999;
+      background: radial-gradient(circle at center, #10251c 0%, #07130d 100%);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      color: #f6f4e9;
+      pointer-events: auto;
+    }
+
+    @media screen and (orientation: portrait) and (max-width: 1024px) {
+      .landscape-gate-overlay {
+        display: flex !important;
+      }
+    }
+
+    .landscape-gate-card {
+      max-width: 360px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .phone-rotate-glow {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: rgba(229, 211, 158, 0.08);
+      border: 1px solid rgba(229, 211, 158, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulse-ring 2.5s infinite ease-in-out;
+    }
+
+    .phone-rotate-anim {
+      width: 52px;
+      height: 52px;
+      animation: phone-rotate-kf 2.5s infinite ease-in-out;
+    }
+
+    @keyframes phone-rotate-kf {
+      0%, 20% { transform: rotate(0deg); }
+      50%, 80% { transform: rotate(90deg); }
+      100% { transform: rotate(90deg); }
+    }
+
+    @keyframes pulse-ring {
+      0%, 100% { box-shadow: 0 0 20px rgba(229, 211, 158, 0.15); }
+      50% { box-shadow: 0 0 40px rgba(128, 233, 244, 0.35); }
+    }
+
+    .gate-kicker {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #ddc889;
+    }
+
+    .gate-title {
+      font-family: 'Cinzel', serif;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      color: #fff9e6;
+      line-height: 1.25;
+    }
+
+    .gate-desc {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #b5c4ba;
+    }
+
+    .gate-btn {
+      margin-top: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 22px;
+      background: linear-gradient(135deg, #f0da96 0%, #b58d3d 100%);
+      color: #14281d;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-radius: 8px;
+      box-shadow: 0 6px 20px rgba(240, 218, 150, 0.35);
+      cursor: pointer;
+      border: none;
     }
 
     /* Hide scrollbar on horizontal pill strips */
@@ -1476,21 +1757,83 @@
       </div>
     </div>
 
-    <!-- Clean, Side-by-Side Motorsport Touch Controls for Phones & Tablets -->
-    <!-- Bottom-Left Steering Deck -->
-    <div class="touch-control-cluster absolute bottom-3 sm:bottom-5 left-3 sm:left-6 flex flex-col items-start gap-2 pointer-events-auto" style="padding-bottom: env(safe-area-inset-bottom); padding-left: env(safe-area-inset-left);">
-      <div class="flex items-center gap-2.5 sm:gap-3.5 bg-[#0a1911]/65 backdrop-blur-md p-1.5 sm:p-2 rounded-2xl border border-[#e5d39e]/25">
-        <button id="touch-left" type="button" aria-label="Steer Left" class="touch-btn w-14 h-14 sm:w-18 sm:h-18 rounded-xl bg-[#143021]/95 border-2 border-[#e5d39e]/55 text-3xl sm:text-4xl font-black text-[#f6f4e9] flex items-center justify-center shadow-lg active:bg-[#e5d39e] active:text-[#143021]">‹</button>
-        <button id="touch-right" type="button" aria-label="Steer Right" class="touch-btn w-14 h-14 sm:w-18 sm:h-18 rounded-xl bg-[#143021]/95 border-2 border-[#e5d39e]/55 text-3xl sm:text-4xl font-black text-[#f6f4e9] flex items-center justify-center shadow-lg active:bg-[#e5d39e] active:text-[#143021]">›</button>
-      </div>
+    <!-- ─── Modern Mobile Racing Controls (F1 / Console Layout matching User Reference) ─── -->
+    <!-- Bottom-Left Steering Deck: [ ← ] [ → ] -->
+    <div class="touch-control-deck touch-left-deck">
+      <button id="touch-left" type="button" aria-label="Steer Left" class="touch-btn touch-btn-steer">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </button>
+      <button id="touch-right" type="button" aria-label="Steer Right" class="touch-btn touch-btn-steer">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
     </div>
 
-    <!-- Bottom-Right Horizontal 3-Pedal Footwell Deck (DRIFT | BRAKE | GAS) -->
-    <div class="touch-control-cluster absolute bottom-3 sm:bottom-5 right-3 sm:right-6 flex items-end gap-2 sm:gap-2.5 bg-[#0a1911]/65 backdrop-blur-md p-1.5 sm:p-2 rounded-2xl border border-[#e5d39e]/25 pointer-events-auto" style="padding-bottom: max(6px, env(safe-area-inset-bottom)); padding-right: max(6px, env(safe-area-inset-right));">
-      <button id="touch-drift" type="button" class="touch-btn w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#102a2e]/95 border-2 border-[#80e9f4]/60 text-[10px] sm:text-xs font-black tracking-wider text-[#80e9f4] flex items-center justify-center shadow-lg px-2 active:bg-[#80e9f4] active:text-[#102a2e]">DRIFT</button>
-      <button id="touch-brake" type="button" class="touch-btn w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#3d1916]/95 border-2 border-[#fca5a5]/60 text-[10px] sm:text-xs font-black tracking-wider text-[#fecaca] flex items-center justify-center shadow-lg px-2 active:bg-[#fca5a5] active:text-[#3d1916]">BRAKE</button>
-      <button id="touch-accel" type="button" class="touch-btn w-16 h-20 sm:w-18 sm:h-24 rounded-xl bg-gradient-to-b from-[#f0da96] to-[#b58d3d] border-2 border-[#fff9e6] text-xs sm:text-sm font-black tracking-widest text-[#14281d] flex items-center justify-center shadow-xl px-2.5 active:brightness-125">GAS</button>
+    <!-- Bottom-Right Driving Deck matching Reference Screenshot: [ DRIFT ] [ BOOST ] [ BRAKE ] [ GAS ] -->
+    <div class="touch-control-deck touch-right-deck">
+      <div class="touch-row-top">
+        <!-- DRIFT (Circular button with golden ring) -->
+        <button id="touch-drift" type="button" aria-label="Drift" class="touch-btn touch-btn-drift" title="Drift">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="12" cy="12" r="9" stroke-dasharray="4 2"></circle>
+            <path d="M12 7v5l3 3"></path>
+          </svg>
+          <span class="touch-sublabel">DRIFT</span>
+        </button>
+        <!-- BOOST / NITRO (Speedometer Gauge Icon) -->
+        <button id="touch-boost" type="button" aria-label="Nitro Boost" class="touch-btn touch-btn-boost" title="Nitro Boost">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 2a10 10 0 0 0-7.07 17.07l1.41-1.41A8 8 0 1 1 12 20v2a10 10 0 0 0 0-20z"></path>
+            <line x1="12" y1="12" x2="16" y2="8" stroke-width="2.5"></line>
+            <circle cx="12" cy="12" r="2" fill="currentColor"></circle>
+          </svg>
+          <span class="touch-sublabel">BOOST</span>
+        </button>
+      </div>
+      <div class="touch-row-bottom">
+        <!-- BRAKE (Ribbed Brake Pedal) -->
+        <button id="touch-brake" type="button" aria-label="Brake / Reverse" class="touch-btn touch-btn-brake">
+          <div class="pedal-ribs"><span></span><span></span><span></span><span></span></div>
+          <span class="touch-sublabel">BRAKE</span>
+        </button>
+        <!-- GAS (Tall Ribbed Accelerator Pedal) -->
+        <button id="touch-accel" type="button" aria-label="Gas Accelerator" class="touch-btn touch-btn-gas">
+          <div class="pedal-ribs gas-ribs"><span></span><span></span><span></span><span></span><span></span></div>
+          <span class="touch-sublabel">GAS</span>
+        </button>
+      </div>
     </div>
+  </div>
+
+  <!-- MANDATORY HORIZONTAL / LANDSCAPE ORIENTATION GATE FOR PHONES -->
+  <div id="landscape-gate" class="landscape-gate-overlay">
+    <div class="landscape-gate-card">
+      <div class="phone-rotate-glow">
+        <svg class="phone-rotate-anim" viewBox="0 0 64 64" fill="none" stroke="#e5d39e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="22" y="10" width="20" height="44" rx="4" />
+          <circle cx="32" cy="48" r="1.5" fill="#e5d39e" />
+          <path d="M48 20 C 56 26, 56 38, 48 44" stroke="#80e9f4" stroke-width="3" />
+          <polyline points="46 16 48 21 43 23" stroke="#80e9f4" stroke-width="3" />
+        </svg>
+      </div>
+      <span class="gate-kicker">WHITE HOUSE GRAND PRIX</span>
+      <h2 class="gate-title">PLEASE ROTATE TO HORIZONTAL</h2>
+      <p class="gate-desc">
+        This high-speed 3D simulation requires landscape orientation for full panoramic visibility and dual-thumb racing controls.
+      </p>
+      <button id="btn-gate-fullscreen" type="button" class="gate-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+        <span>ENTER FULLSCREEN LANDSCAPE</span>
+      </button>
+    </div>
+  </div>
   </div>
 
   <!-- HOW TO PLAY MODAL (Exact Arena Option B Modal) -->
@@ -3882,6 +4225,16 @@ window.WHGP.createRaceWorld = function(THREE, envData, buildingData, textures, a
       if (r.boostCooldown > 0) r.boostCooldown = Math.max(0, r.boostCooldown - dt);
       if (r.sparkCooldown > 0) r.sparkCooldown = Math.max(0, r.sparkCooldown - dt);
 
+      // Manual Nitro Boost Trigger for Player
+      if (r.isPlayer && playerInput.boost && r.boostCooldown <= 0 && r.boostTimer <= 0) {
+        r.boostTimer = 2.2;
+        r.boostCooldown = 3.5;
+        r.speed = Math.min(st.maxSpeed * topSpeedMultiplier * 1.25, Math.max(r.speed * 1.2, st.maxSpeed * topSpeedMultiplier * 0.95));
+        if (particleCtrl) particleCtrl.emitBoostBurst(r.x, r.y, r.z);
+        if (audioCtrl) audioCtrl.playBoostWhoosh();
+        if (onCameraShake) onCameraShake(0.16);
+      }
+
       const effectiveMaxSpeed = st.maxSpeed * topSpeedMultiplier * boostMultiplier * (r.isPlayer ? 1.0 : ctrl.rubberBandFactor * r.aiSkill);
 
       // Smooth responsive throttle & braking
@@ -3913,11 +4266,12 @@ window.WHGP.createRaceWorld = function(THREE, envData, buildingData, textures, a
       const targetSteer = ctrl.steer * st.turnRate * speedSteerDamp * driftTurnBonus * steerDir;
 
       // Fast response on turn-in, ultra-fast snap-back to 0 when key is released!
-      const steerLerpRate = (Math.abs(ctrl.steer) < 0.05) ? 32.0 : 14.0;
+      const steerLerpRate = (Math.abs(ctrl.steer) < 0.05) ? 32.0 : 18.0;
       r.steerAngle += (targetSteer - r.steerAngle) * Math.min(1, dt * steerLerpRate);
 
-      if (Math.abs(r.speed) > 0.2) {
-        r.yaw += r.steerAngle * Math.min(1, Math.abs(r.speed) / 3.5) * dt;
+      const turnSpeedFactor = Math.max(0.75, Math.min(1.25, Math.abs(r.speed) / 2.5));
+      if (Math.abs(r.speed) > 0.1) {
+        r.yaw += r.steerAngle * turnSpeedFactor * dt;
       }
 
       // Controlled, bounded drift slip angle (never spins out!)
@@ -5366,36 +5720,75 @@ window.WHGP.initGame = function() {
     if (e.key === 'Shift') playerInput.boost = false;
   });
 
-  function bindHoldButton(btnId, field) {
+  // Dedicated Multi-Touch Game Button Handler (Eliminates Pointer Capture Cancelling!)
+  function bindTouchButton(btnId, onDown, onUp) {
     const btn = document.getElementById(btnId);
     if (!btn) return;
-    const start = (ev) => {
-      ev.preventDefault();
-      if (btn.setPointerCapture && ev.pointerId !== undefined) {
-        try { btn.setPointerCapture(ev.pointerId); } catch (e) {}
+
+    const activeTouches = new Set();
+
+    btn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      for (let i = 0; i < e.changedTouches.length; i++) {
+        activeTouches.add(e.changedTouches[i].identifier);
       }
-      audioCtrl.ensureContext();
-      playerInput[field] = true;
       btn.classList.add('active-touch');
-    };
-    const end = (ev) => {
-      ev.preventDefault();
-      if (btn.releasePointerCapture && ev.pointerId !== undefined) {
-        try { btn.releasePointerCapture(ev.pointerId); } catch (e) {}
+      audioCtrl.ensureContext();
+      onDown();
+    }, { passive: false });
+
+    const handleRelease = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      for (let i = 0; i < e.changedTouches.length; i++) {
+        activeTouches.delete(e.changedTouches[i].identifier);
       }
-      playerInput[field] = false;
-      btn.classList.remove('active-touch');
+      if (activeTouches.size === 0) {
+        btn.classList.remove('active-touch');
+        onUp();
+      }
     };
-    btn.addEventListener('pointerdown', start);
-    btn.addEventListener('pointerup', end);
-    btn.addEventListener('pointercancel', end);
-    btn.addEventListener('lostpointercapture', end);
+
+    btn.addEventListener('touchend', handleRelease, { passive: false });
+    btn.addEventListener('touchcancel', handleRelease, { passive: false });
+
+    // Desktop/Mouse testing fallback
+    btn.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      btn.classList.add('active-touch');
+      audioCtrl.ensureContext();
+      onDown();
+    });
+    btn.addEventListener('mouseup', () => {
+      btn.classList.remove('active-touch');
+      onUp();
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.classList.remove('active-touch');
+      onUp();
+    });
   }
-  bindHoldButton('touch-left', 'left');
-  bindHoldButton('touch-right', 'right');
-  bindHoldButton('touch-accel', 'forward');
-  bindHoldButton('touch-brake', 'backward');
-  bindHoldButton('touch-drift', 'drift');
+
+  bindTouchButton('touch-left',  () => { playerInput.left = true; },     () => { playerInput.left = false; });
+  bindTouchButton('touch-right', () => { playerInput.right = true; },    () => { playerInput.right = false; });
+  bindTouchButton('touch-accel', () => { playerInput.forward = true; },  () => { playerInput.forward = false; });
+  bindTouchButton('touch-brake', () => { playerInput.backward = true; }, () => { playerInput.backward = false; });
+  bindTouchButton('touch-drift', () => { playerInput.drift = true; },    () => { playerInput.drift = false; });
+  bindTouchButton('touch-boost', () => {
+    playerInput.boost = true;
+    if (playerRacer && playerRacer.boostCooldown <= 0 && playerRacer.boostTimer <= 0) {
+      playerRacer.boostTimer = 2.2;
+      playerRacer.boostCooldown = 3.5;
+      const effectiveMaxSpeed = playerRacer.spec.stats.maxSpeed;
+      playerRacer.speed = Math.min(effectiveMaxSpeed * 1.25, Math.max(playerRacer.speed * 1.2, effectiveMaxSpeed * 0.95));
+      if (particleCtrl) particleCtrl.emitBoostBurst(playerRacer.x, playerRacer.y, playerRacer.z);
+      if (audioCtrl) audioCtrl.playBoostWhoosh();
+      if (onCameraShake) onCameraShake(0.16);
+    }
+  }, () => {
+    playerInput.boost = false;
+  });
 
   window.addEventListener('deviceorientation', (e) => {
     if (!tiltEnabled || e.gamma === null) return;
@@ -5537,6 +5930,31 @@ window.WHGP.initGame = function() {
       toggleFullscreen();
     });
   }
+
+  // Mandatory Landscape Gate Button & Orientation Monitor
+  const btnGateFs = document.getElementById('btn-gate-fullscreen');
+  if (btnGateFs) {
+    btnGateFs.addEventListener('click', () => {
+      audioCtrl.ensureContext();
+      toggleFullscreen(true);
+    });
+  }
+
+  function checkOrientationGate() {
+    const isPortrait = window.innerHeight > window.innerWidth && window.innerWidth <= 1024;
+    const gate = document.getElementById('landscape-gate');
+    if (gate) {
+      gate.style.display = isPortrait ? 'flex' : 'none';
+    }
+    if (!isPortrait) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  }
+  window.addEventListener('resize', checkOrientationGate);
+  window.addEventListener('orientationchange', () => {
+    setTimeout(checkOrientationGate, 120);
+  });
+  checkOrientationGate();
 
   // How to Play Modal Controls
   function openHowModal() {

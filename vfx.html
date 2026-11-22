@@ -548,6 +548,9 @@
   <!-- LIVE HUD STATUS BAR -->
   <div id="status">Initializing AR Camera...</div>
 
+  <!-- DEBUG HUD (visible on phones for diagnosing camera issues) -->
+  <div id="debugHud" style="position: fixed; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.85); color: #0f0; font-family: monospace; font-size: 10px; padding: 8px; z-index: 9999; white-space: pre-wrap; max-height: 30vh; overflow-y: auto; display: none; pointer-events: auto;"></div>
+
   <!-- RETICLE GUIDE -->
   <div id="arReticle" class="ar-reticle"></div>
 
@@ -637,6 +640,24 @@
 
   <!-- APPLICATION CONTROLLER SCRIPT (Baisakhi 2026 Engine + Founders Edition) -->
   <script>
+    // Global error handler to catch ALL unhandled errors (visible in debug HUD on phones)
+    window.__arDebugLog = [];
+    window.onerror = function(msg, url, line, col, error) {
+      const entry = '[ERR] ' + msg + ' at ' + (url||'').split('/').pop() + ':' + line;
+      window.__arDebugLog.push(entry);
+      console.error(entry);
+      const dbg = document.getElementById('debugHud');
+      if (dbg) dbg.innerText = window.__arDebugLog.slice(-5).join('\n');
+      return false;
+    };
+    window.addEventListener('unhandledrejection', function(e) {
+      const entry = '[PROMISE] ' + (e.reason ? (e.reason.message || e.reason) : 'unknown');
+      window.__arDebugLog.push(entry);
+      console.error(entry);
+      const dbg = document.getElementById('debugHud');
+      if (dbg) dbg.innerText = window.__arDebugLog.slice(-5).join('\n');
+    });
+
     document.addEventListener("DOMContentLoaded", () => {
       const getStartedBtn = document.getElementById('getStartedBtn');
       const homescreen = document.getElementById('homescreen');
@@ -715,6 +736,21 @@
         if (isStarted) return;
         isStarted = true;
 
+        // Show debug HUD only if explicitly enabled via ?debug=1 or on error
+        const dbg = document.getElementById('debugHud');
+        const isDebugMode = window.location.search.includes('debug=1');
+        if (dbg && isDebugMode) dbg.style.display = 'block';
+        function logDebug(msg) {
+          window.__arDebugLog.push(msg);
+          console.log('[AR]', msg);
+          if (dbg) dbg.innerText = window.__arDebugLog.slice(-8).join('\n');
+        }
+
+        logDebug('startAREngine called');
+        logDebug('UA: ' + navigator.userAgent.substring(0, 60));
+        logDebug('getUserMedia: ' + (navigator.mediaDevices && navigator.mediaDevices.getUserMedia ? 'YES' : 'NO'));
+        logDebug('Scene loaded: ' + (sceneEl.hasLoaded ? 'YES' : 'NO'));
+
         homescreen.classList.add('hidden');
         if (permissionScreen) permissionScreen.style.display = 'none';
         if (infoScreen) infoScreen.style.display = 'none';
@@ -730,59 +766,78 @@
 
         // Bulletproof MindAR Launch (prevents showLoading undefined TypeError on phones)
         const initAndStartMindAR = () => {
+          logDebug('initAndStartMindAR called');
           const system = sceneEl.systems && sceneEl.systems["mindar-image-system"];
-          if (system) {
-            if (!system.ui) {
-              try {
-                if (typeof system.setup === 'function') {
-                  system.setup({
-                    imageTargetSrc: './mindar-targets/targets.mind',
-                    maxTrack: 1,
-                    showStats: false,
-                    uiLoading: 'no',
-                    uiScanning: 'no',
-                    uiError: 'no'
-                  });
-                }
-              } catch (setupErr) {
-                console.warn("system.setup fallback:", setupErr);
-              }
-            }
+          if (!system) {
+            logDebug('ERROR: mindar-image-system NOT FOUND in sceneEl.systems');
+            logDebug('Available systems: ' + (sceneEl.systems ? Object.keys(sceneEl.systems).join(', ') : 'NONE'));
+            statusEl.innerText = "AR System Failed — Please Refresh";
+            statusEl.style.background = 'rgba(239, 68, 68, 0.9)';
+            return;
+          }
+          logDebug('system found, ui=' + (system.ui ? 'YES' : 'NO'));
 
-            // Ensure ui object and all expected callback methods exist
-            if (!system.ui) {
-              system.ui = {
-                showLoading: () => {},
-                hideLoading: () => {},
-                showScanning: () => {},
-                hideScanning: () => {},
-                showCompatibility: () => {},
-                hideCompatibility: () => {}
-              };
-            } else {
-              const noop = () => {};
-              if (typeof system.ui.showLoading !== 'function') system.ui.showLoading = noop;
-              if (typeof system.ui.hideLoading !== 'function') system.ui.hideLoading = noop;
-              if (typeof system.ui.showScanning !== 'function') system.ui.showScanning = noop;
-              if (typeof system.ui.hideScanning !== 'function') system.ui.hideScanning = noop;
-              if (typeof system.ui.showCompatibility !== 'function') system.ui.showCompatibility = noop;
-              if (typeof system.ui.hideCompatibility !== 'function') system.ui.hideCompatibility = noop;
-            }
-
+          if (!system.ui) {
+            logDebug('system.ui missing, calling setup fallback...');
             try {
-              system.start();
-            } catch (e) {
-              console.error("MindAR Start Error:", e);
-              statusEl.innerText = "Camera Start Failed — Please Refresh";
-              statusEl.style.background = 'rgba(239, 68, 68, 0.9)';
+              if (typeof system.setup === 'function') {
+                system.setup({
+                  imageTargetSrc: './mindar-targets/targets.mind',
+                  maxTrack: 1,
+                  showStats: false,
+                  uiLoading: 'no',
+                  uiScanning: 'no',
+                  uiError: 'no'
+                });
+                logDebug('setup() called, ui=' + (system.ui ? 'YES' : 'STILL NO'));
+              }
+            } catch (setupErr) {
+              logDebug('setup() error: ' + setupErr.message);
             }
+          }
+
+          // Ensure ui object and all expected callback methods exist
+          if (!system.ui) {
+            logDebug('Injecting stub ui object');
+            system.ui = {
+              showLoading: () => {},
+              hideLoading: () => {},
+              showScanning: () => {},
+              hideScanning: () => {},
+              showCompatibility: () => {},
+              hideCompatibility: () => {}
+            };
+          } else {
+            const noop = () => {};
+            if (typeof system.ui.showLoading !== 'function') system.ui.showLoading = noop;
+            if (typeof system.ui.hideLoading !== 'function') system.ui.hideLoading = noop;
+            if (typeof system.ui.showScanning !== 'function') system.ui.showScanning = noop;
+            if (typeof system.ui.hideScanning !== 'function') system.ui.hideScanning = noop;
+            if (typeof system.ui.showCompatibility !== 'function') system.ui.showCompatibility = noop;
+            if (typeof system.ui.hideCompatibility !== 'function') system.ui.hideCompatibility = noop;
+          }
+
+          logDebug('Calling system.start()...');
+          try {
+            system.start();
+            logDebug('system.start() succeeded');
+          } catch (e) {
+            logDebug('system.start() THREW: ' + e.message);
+            console.error("MindAR Start Error:", e);
+            statusEl.innerText = "Camera Start Failed — Please Refresh";
+            statusEl.style.background = 'rgba(239, 68, 68, 0.9)';
           }
         };
 
-        if (sceneEl.systems && sceneEl.systems["mindar-image-system"]) {
+        if (sceneEl.hasLoaded && sceneEl.systems && sceneEl.systems["mindar-image-system"]) {
+          logDebug('Scene already loaded, starting immediately');
           initAndStartMindAR();
         } else {
-          sceneEl.addEventListener('loaded', initAndStartMindAR, { once: true });
+          logDebug('Scene NOT loaded yet, waiting for loaded event...');
+          sceneEl.addEventListener('loaded', () => {
+            logDebug('Scene loaded event fired');
+            initAndStartMindAR();
+          }, { once: true });
         }
 
         // Mobile gesture unlock for media
@@ -863,6 +918,11 @@
       // 6. AR Ready & Error Listeners
       sceneEl.addEventListener("arReady", () => {
         arReadyFired = true;
+        const dbg = document.getElementById('debugHud');
+        if (dbg) {
+          window.__arDebugLog.push('arReady event fired!');
+          dbg.innerText = window.__arDebugLog.slice(-8).join('\n');
+        }
         if (infoScreen.style.display === 'none') {
           if (currentAudio && !currentAudio.paused) {
             statusEl.innerText = `▶ Playing: ${currentAudioTitle} · Audio continues while you read`;
@@ -873,8 +933,14 @@
         }
       });
 
-      sceneEl.addEventListener("arError", () => {
-        statusEl.innerText = "Camera Denied - Please Refresh";
+      sceneEl.addEventListener("arError", (e) => {
+        const dbg = document.getElementById('debugHud');
+        const detail = e && e.detail ? JSON.stringify(e.detail) : 'no detail';
+        if (dbg) {
+          window.__arDebugLog.push('arError event: ' + detail);
+          dbg.innerText = window.__arDebugLog.slice(-8).join('\n');
+        }
+        statusEl.innerText = "Camera Denied — Please Allow Camera and Refresh";
         statusEl.style.background = 'rgba(239, 68, 68, 0.9)';
       });
 
