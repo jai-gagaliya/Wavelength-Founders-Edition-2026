@@ -66,6 +66,11 @@
       color: #f7f3eb;
     }
 
+    html.ar-active,
+    body.ar-active {
+      background: transparent !important;
+    }
+
     /* ─── TOP NAVIGATION HUD ─── */
     .ar-nav-bar {
       position: absolute;
@@ -574,68 +579,68 @@
       embedded renderer="colorManagement: true; physicallyCorrectLights: true;" vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false">
 
-      <a-assets timeout="1500">
-        <!-- VFX Video Overlay -->
-        <video id="vid1" src="./assets/videos/Navier-%20Strokes%20VFX.mp4" preload="metadata" loop muted playsinline
-          webkit-playsinline crossorigin="anonymous"></video>
+      <a-assets timeout="100">
+        <!-- Kept minimal so scene and MindAR initialize instantly on mobile -->
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <!-- Target 0: Page 06 - Physics Nobel Prize (Dhruv Aggarwal) -->
       <a-entity id="target0" mindar-image-target="targetIndex: 0">
-        <a-plane data-audio="audio06" material="transparent: true; opacity: 0;" position="0 0 0" height="1.4145"
+        <a-plane data-audio="audio-06" material="transparent: true; opacity: 0;" position="0 0 0" height="1.4145"
           width="1.0" rotation="0 0 0"></a-plane>
       </a-entity>
 
       <!-- Target 1: Page 07 - Chemistry Nobel Prize (Tejas Gulati) -->
       <a-entity id="target1" mindar-image-target="targetIndex: 1">
-        <a-plane data-audio="audio07" material="transparent: true; opacity: 0;" position="0 0 0" height="1.4145"
+        <a-plane data-audio="audio-07" material="transparent: true; opacity: 0;" position="0 0 0" height="1.4145"
           width="1.0" rotation="0 0 0"></a-plane>
       </a-entity>
 
       <!-- Target 2: Page 08 - Medicine Nobel Prize (Chirag Rajparohit) -->
       <a-entity id="target2" mindar-image-target="targetIndex: 2">
-        <a-plane data-audio="audio08" material="transparent: true; opacity: 0;" position="0 0 0" height="1.4145"
+        <a-plane data-audio="audio-08" material="transparent: true; opacity: 0;" position="0 0 0" height="1.4145"
           width="1.0" rotation="0 0 0"></a-plane>
       </a-entity>
 
       <!-- Target 3: Page 13 - Tesla Roadster Review (Agastya Gupta) -->
       <a-entity id="target3" mindar-image-target="targetIndex: 3">
-        <a-plane data-audio="audio13" material="transparent: true; opacity: 0;" position="0 0 0" height="1.4145"
+        <a-plane data-audio="audio-13" material="transparent: true; opacity: 0;" position="0 0 0" height="1.4145"
           width="1.0" rotation="0 0 0"></a-plane>
       </a-entity>
 
       <!-- Target 4: Page 30 - Navier-Stokes VFX Motion Video Reveal -->
       <a-entity id="target4" mindar-image-target="targetIndex: 4">
-        <a-plane class="video-overlay" data-video="vid1"
-          material="src: #vid1; shader: flat; side: double; transparent: true;" position="0 0 0" height="1.4145"
+        <a-plane class="video-overlay" data-video="video-30"
+          material="src: #video-30; shader: flat; side: double; transparent: true;" position="0 0 0" height="1.4145"
           width="1.0" rotation="0 0 0" video-overlay></a-plane>
       </a-entity>
 
       <!-- Target 5: Page 37 - Breaking Point: Einstein Light Box (Shaurya Agarwal) -->
       <a-entity id="target5" mindar-image-target="targetIndex: 5">
-        <a-plane data-audio="audio37" material="transparent: true; opacity: 0;" position="0 0 0" height="1.4145"
+        <a-plane data-audio="audio-37" material="transparent: true; opacity: 0;" position="0 0 0" height="1.4145"
           width="1.0" rotation="0 0 0"></a-plane>
       </a-entity>
 
       <!-- Target 6: Page 38 - Breaking Point: Bohr Model (Satwik Sameer) -->
       <a-entity id="target6" mindar-image-target="targetIndex: 6">
-        <a-plane data-audio="audio38" material="transparent: true; opacity: 0;" position="0 0 0" height="1.4145"
+        <a-plane data-audio="audio-38" material="transparent: true; opacity: 0;" position="0 0 0" height="1.4145"
           width="1.0" rotation="0 0 0"></a-plane>
       </a-entity>
 
     </a-scene>
   </div>
 
-  <!-- Audio Elements Outside A-Frame Assets (Prevents Scene Loading Block on Mobile) -->
+  <!-- Media Pool Outside A-Frame Assets (Prevents Scene Loading Block on Mobile) -->
   <div id="audioAssetsPool" style="display: none;" aria-hidden="true">
-    <audio id="audio06" src="./assets/audio/06.mp3" preload="none" crossorigin="anonymous"></audio>
-    <audio id="audio07" src="./assets/audio/07.mp3" preload="none" crossorigin="anonymous"></audio>
-    <audio id="audio08" src="./assets/audio/08.mp3" preload="none" crossorigin="anonymous"></audio>
-    <audio id="audio13" src="./assets/audio/13.mp3" preload="none" crossorigin="anonymous"></audio>
-    <audio id="audio37" src="./assets/audio/37.mp3" preload="none" crossorigin="anonymous"></audio>
-    <audio id="audio38" src="./assets/audio/38.mp3" preload="none" crossorigin="anonymous"></audio>
+    <video id="video-30" src="./assets/videos/30.mp4" preload="none" loop muted playsinline
+      webkit-playsinline crossorigin="anonymous"></video>
+    <audio id="audio-06" src="./assets/audio/06.mp3" preload="none" crossorigin="anonymous"></audio>
+    <audio id="audio-07" src="./assets/audio/07.mp3" preload="none" crossorigin="anonymous"></audio>
+    <audio id="audio-08" src="./assets/audio/08.mp3" preload="none" crossorigin="anonymous"></audio>
+    <audio id="audio-13" src="./assets/audio/13.mp3" preload="none" crossorigin="anonymous"></audio>
+    <audio id="audio-37" src="./assets/audio/37.mp3" preload="none" crossorigin="anonymous"></audio>
+    <audio id="audio-38" src="./assets/audio/38.mp3" preload="none" crossorigin="anonymous"></audio>
   </div>
 
   <!-- APPLICATION CONTROLLER SCRIPT (Baisakhi 2026 Engine + Founders Edition) -->
@@ -701,7 +706,7 @@
         "Page 38: Bohr Model"
       ];
 
-      const ALL_AUDIO_IDS = ['audio06', 'audio07', 'audio08', 'audio13', 'audio37', 'audio38'];
+      const ALL_AUDIO_IDS = ['audio-06', 'audio-07', 'audio-08', 'audio-13', 'audio-37', 'audio-38'];
 
       // Single-stream enforcement: guarantees only ONE audio or video ever plays at any time
       function stopAllAudioExcept(exceptEl) {
@@ -714,7 +719,7 @@
             } catch (e) {}
           }
         });
-        const vid = document.getElementById('vid1');
+        const vid = document.getElementById('video-30');
         if (vid && vid !== exceptEl) {
           try {
             vid.pause();
@@ -739,11 +744,11 @@
       // 1. Instant Start Engine function
       let isStarted = false;
 
-      // Ensure camera video stream on iOS Safari has playsinline and webkit-playsinline
+      // Ensure camera video stream on iOS Safari and Android Chrome has playsinline and webkit-playsinline
       const videoWatcher = new MutationObserver((mutations) => {
         mutations.forEach((m) => {
           m.addedNodes.forEach((node) => {
-            if (node.tagName && node.tagName.toLowerCase() === 'video') {
+            if (node.tagName && node.tagName.toLowerCase() === 'video' && node.id !== 'video-30') {
               node.setAttribute('playsinline', '');
               node.setAttribute('webkit-playsinline', '');
               node.setAttribute('autoplay', '');
@@ -752,7 +757,7 @@
           });
         });
       });
-      videoWatcher.observe(arContainer || document.body, { childList: true, subtree: true });
+      videoWatcher.observe(document.body, { childList: true, subtree: true });
 
       const startAREngine = () => {
         if (isStarted) return;
@@ -773,6 +778,10 @@
         logDebug('getUserMedia: ' + (navigator.mediaDevices && navigator.mediaDevices.getUserMedia ? 'YES' : 'NO'));
         logDebug('Scene loaded: ' + (sceneEl.hasLoaded ? 'YES' : 'NO'));
 
+        // Make background transparent for AR camera view
+        document.documentElement.classList.add('ar-active');
+        document.body.classList.add('ar-active');
+
         homescreen.classList.add('hidden');
         if (permissionScreen) permissionScreen.style.display = 'none';
         if (infoScreen) infoScreen.style.display = 'none';
@@ -786,89 +795,60 @@
           statusEl.innerText = "Initializing AR Camera...";
         }
 
-        // Bulletproof MindAR Launch (prevents showLoading undefined TypeError on phones)
-        const initAndStartMindAR = () => {
-          logDebug('initAndStartMindAR called');
+        const handleStartError = (err) => {
+          const msg = (err && err.message) ? err.message : String(err);
+          logDebug('MindAR Start Error: ' + msg);
+          console.error("MindAR Start Error:", err);
+          statusEl.innerText = "Camera Denied or In Use — Please Allow & Refresh";
+          statusEl.style.background = 'rgba(239, 68, 68, 0.9)';
+        };
+
+        const startSystem = () => {
+          logDebug('Starting MindAR system...');
           const system = sceneEl.systems && sceneEl.systems["mindar-image-system"];
-          if (!system) {
-            logDebug('ERROR: mindar-image-system NOT FOUND in sceneEl.systems');
-            logDebug('Available systems: ' + (sceneEl.systems ? Object.keys(sceneEl.systems).join(', ') : 'NONE'));
-            statusEl.innerText = "AR System Failed — Please Refresh";
-            statusEl.style.background = 'rgba(239, 68, 68, 0.9)';
-            return;
-          }
-          logDebug('system found, ui=' + (system.ui ? 'YES' : 'NO'));
-
-          if (!system.ui) {
-            logDebug('system.ui missing, calling setup fallback...');
+          if (system) {
             try {
-              if (typeof system.setup === 'function') {
-                system.setup({
-                  imageTargetSrc: './mindar-targets/targets.mind',
-                  maxTrack: 1,
-                  showStats: false,
-                  uiLoading: 'no',
-                  uiScanning: 'no',
-                  uiError: 'no'
-                });
-                logDebug('setup() called, ui=' + (system.ui ? 'YES' : 'STILL NO'));
+              logDebug('Calling system.start()...');
+              const p = system.start();
+              if (p && typeof p.then === 'function') {
+                p.then(() => {
+                  logDebug('system.start() promise resolved');
+                }).catch(handleStartError);
               }
-            } catch (setupErr) {
-              logDebug('setup() error: ' + setupErr.message);
+            } catch (e) {
+              handleStartError(e);
             }
-          }
-
-          // Ensure ui object and all expected callback methods exist
-          if (!system.ui) {
-            logDebug('Injecting stub ui object');
-            system.ui = {
-              showLoading: () => {},
-              hideLoading: () => {},
-              showScanning: () => {},
-              hideScanning: () => {},
-              showCompatibility: () => {},
-              hideCompatibility: () => {}
-            };
           } else {
-            const noop = () => {};
-            if (typeof system.ui.showLoading !== 'function') system.ui.showLoading = noop;
-            if (typeof system.ui.hideLoading !== 'function') system.ui.hideLoading = noop;
-            if (typeof system.ui.showScanning !== 'function') system.ui.showScanning = noop;
-            if (typeof system.ui.hideScanning !== 'function') system.ui.hideScanning = noop;
-            if (typeof system.ui.showCompatibility !== 'function') system.ui.showCompatibility = noop;
-            if (typeof system.ui.hideCompatibility !== 'function') system.ui.hideCompatibility = noop;
-          }
-
-          logDebug('Calling system.start()...');
-          try {
-            system.start();
-            logDebug('system.start() succeeded');
-          } catch (e) {
-            logDebug('system.start() THREW: ' + e.message);
-            console.error("MindAR Start Error:", e);
-            statusEl.innerText = "Camera Start Failed — Please Refresh";
-            statusEl.style.background = 'rgba(239, 68, 68, 0.9)';
+            logDebug('System not ready yet, waiting for scene loaded event');
+            sceneEl.addEventListener('loaded', () => {
+              const sys = sceneEl.systems && sceneEl.systems["mindar-image-system"];
+              if (sys) {
+                try {
+                  const p = sys.start();
+                  if (p && typeof p.catch === 'function') {
+                    p.catch(handleStartError);
+                  }
+                } catch(err) {
+                  handleStartError(err);
+                }
+              }
+            }, { once: true });
           }
         };
 
-        if (sceneEl.hasLoaded && sceneEl.systems && sceneEl.systems["mindar-image-system"]) {
-          logDebug('Scene already loaded, starting immediately');
-          initAndStartMindAR();
+        if (sceneEl.hasLoaded) {
+          startSystem();
         } else {
-          logDebug('Scene NOT loaded yet, waiting for loaded event...');
-          sceneEl.addEventListener('loaded', () => {
-            logDebug('Scene loaded event fired');
-            initAndStartMindAR();
-          }, { once: true });
+          sceneEl.addEventListener('loaded', startSystem, { once: true });
         }
 
-        // Ensure video is properly configured for inline playback without triggering unwanted autoplay
-        const vid1 = document.getElementById('vid1');
-        if (vid1) {
-          vid1.playsInline = true;
-          vid1.setAttribute('playsinline', '');
-          vid1.setAttribute('webkit-playsinline', '');
-          vid1.pause();
+        // Configure overlay video
+        const vid30 = document.getElementById('video-30');
+        if (vid30) {
+          vid30.playsInline = true;
+          vid30.setAttribute('playsinline', '');
+          vid30.setAttribute('webkit-playsinline', '');
+          vid30.pause();
         }
 
         // Enforce strict silence on launch: ensure zero audio tracks play until a target is explicitly scanned & played
@@ -914,7 +894,7 @@
       });
 
       // Attach ended listener on all audio elements to reset button UI gracefully
-      ['audio06', 'audio07', 'audio08', 'audio13', 'audio37', 'audio38'].forEach((id) => {
+      ['audio-06', 'audio-07', 'audio-08', 'audio-13', 'audio-37', 'audio-38'].forEach((id) => {
         const a = document.getElementById(id);
         if (a) {
           a.addEventListener('ended', () => {
@@ -969,6 +949,8 @@
             // Stop and pause all audiobooks immediately when pointing to the VFX page!
             stopAllAudioExcept(null);
             currentAudio = null;
+            currentAudioIndex = -1;
+            currentAudioTitle = "";
             updateAudioButtonUI(false);
             audioControls.classList.remove('visible');
 
@@ -976,14 +958,16 @@
             const overlay = targetEntity.querySelector('[video-overlay]');
             if (overlay && overlay.components && overlay.components['video-overlay']) {
               overlay.components['video-overlay'].show();
-            }
-            const vid = document.getElementById('vid1');
-            if (vid) {
-              vid.muted = false;
-              vid.play().catch(e => {
-                vid.muted = true;
-                vid.play().catch(err => console.error(err));
-              });
+            } else {
+              const vid = document.getElementById('video-30');
+              if (vid) {
+                if (vid.readyState === 0) vid.load();
+                vid.muted = false;
+                vid.play().catch(e => {
+                  vid.muted = true;
+                  vid.play().catch(err => console.error(err));
+                });
+              }
             }
 
             statusEl.innerText = `✓ ${targetLabels[4]} Detected`;
@@ -999,7 +983,7 @@
           if (vidOverlay && vidOverlay.components['video-overlay']) {
             vidOverlay.components['video-overlay'].hide();
           }
-          const vidEl = document.getElementById('vid1');
+          const vidEl = document.getElementById('video-30');
           if (vidEl) { vidEl.pause(); vidEl.currentTime = 0; }
 
           const aOverlay = targetEntity.querySelector('[data-audio]');
@@ -1070,11 +1054,12 @@
             const overlay = targetEntity.querySelector('[video-overlay]');
             if (overlay && overlay.components && overlay.components['video-overlay']) {
               overlay.components['video-overlay'].hide();
-            }
-            const vid = document.getElementById('vid1');
-            if (vid) {
-              vid.pause();
-              vid.currentTime = 0;
+            } else {
+              const vid = document.getElementById('video-30');
+              if (vid) {
+                vid.pause();
+                vid.currentTime = 0;
+              }
             }
             statusEl.innerText = "Scanning... Point at Target Marker";
             statusEl.style.background = 'rgba(7, 19, 13, 0.85)';
@@ -1093,6 +1078,8 @@
             statusEl.innerText = `▶ Playing: ${currentAudioTitle} · Audio continues while you read`;
             statusEl.style.background = 'rgba(13, 30, 22, 0.9)';
           } else {
+            // NOT actively playing: HIDE audio controls so unplayed buttons do not linger on screen!
+            audioControls.classList.remove('visible');
             statusEl.innerText = "Scanning... Point at Target Marker";
             statusEl.style.background = 'rgba(7, 19, 13, 0.85)';
           }
