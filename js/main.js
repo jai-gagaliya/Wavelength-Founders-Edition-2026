@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (statHandlingPct) statHandlingPct.textContent = `${v.stats.handling}%`;
     // Update fullscreen links with selected vehicle
     document.querySelectorAll('a[href*="white-house-grand-prix"]').forEach((link) => {
-      link.href = `./white-house-grand-prix/index.html?vehicle=${encodeURIComponent(vehicleId)}&start=name`;
+      link.href = `./white-house-grand-prix/index.html?vehicle=${encodeURIComponent(vehicleId)}&start=name&autofs=1`;
     });
   }
 
@@ -98,14 +98,44 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Launch Game Inline in Arcade Frame
+  // Launch Game: Auto-Fullscreen for Mobile & Tablet, Inline for Desktop
   if (btnStartEngine && gameIframe && gamePosterOverlay) {
     btnStartEngine.addEventListener("click", () => {
-      gamePosterOverlay.style.display = "none";
       const activeVehicleBtn = document.querySelector(".vehicle-card-btn.is-active");
       const currentVid = activeVehicleBtn ? activeVehicleBtn.getAttribute("data-vehicle-id") : "ambassador";
-      gameIframe.src = `./white-house-grand-prix/index.html?vehicle=${encodeURIComponent(currentVid)}&start=name`;
-      gameIframe.focus();
+
+      const isMobileOrTablet =
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+        (window.innerWidth <= 1024) ||
+        (navigator.maxTouchPoints && navigator.maxTouchPoints > 1);
+
+      if (isMobileOrTablet) {
+        // Direct navigation to fullscreen game for phones and tablets
+        window.location.href = `./white-house-grand-prix/index.html?vehicle=${encodeURIComponent(currentVid)}&start=name&autofs=1`;
+      } else {
+        gamePosterOverlay.style.display = "none";
+        gameIframe.src = `./white-house-grand-prix/index.html?vehicle=${encodeURIComponent(currentVid)}&start=name`;
+        gameIframe.focus();
+      }
     });
+  }
+
+  // Preload MindAR assets in background so AR scanner launches instantly
+  const preloadAR = () => {
+    const urls = [
+      './vfx.html',
+      './mindar-targets/targets.mind',
+      'https://aframe.io/releases/1.2.0/aframe.min.js',
+      'https://cdn.jsdelivr.net/npm/mind-ar@1.2.3/dist/mindar-image-aframe.prod.js'
+    ];
+    urls.forEach((u) => {
+      fetch(u, { mode: 'no-cors', cache: 'force-cache' }).catch(() => {});
+    });
+  };
+
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(preloadAR, { timeout: 2500 });
+  } else {
+    setTimeout(preloadAR, 1200);
   }
 });

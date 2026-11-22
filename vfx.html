@@ -569,20 +569,12 @@
     <a-scene
       mindar-image="imageTargetSrc: ./mindar-targets/targets.mind; autoStart: false; uiScanning: no; uiError: no; uiLoading: no;"
       embedded renderer="colorManagement: true; physicallyCorrectLights: true;" vr-mode-ui="enabled: false"
-      device-orientation-permission-ui="enabled: true">
+      device-orientation-permission-ui="enabled: false">
 
-      <a-assets timeout="10000">
+      <a-assets timeout="1500">
         <!-- VFX Video Overlay -->
-        <video id="vid1" src="./assets/videos/Navier-%20Strokes%20VFX.mp4" preload="auto" loop muted playsinline
+        <video id="vid1" src="./assets/videos/Navier-%20Strokes%20VFX.mp4" preload="metadata" loop muted playsinline
           webkit-playsinline crossorigin="anonymous"></video>
-
-        <!-- In-Engine Audiobooks (6 Student / Founder Articles) -->
-        <audio id="audio06" src="./assets/audio/06.mp3" preload="auto" crossorigin="anonymous"></audio>
-        <audio id="audio07" src="./assets/audio/07.mp3" preload="auto" crossorigin="anonymous"></audio>
-        <audio id="audio08" src="./assets/audio/08.mp3" preload="auto" crossorigin="anonymous"></audio>
-        <audio id="audio13" src="./assets/audio/13.mp3" preload="auto" crossorigin="anonymous"></audio>
-        <audio id="audio37" src="./assets/audio/37.mp3" preload="auto" crossorigin="anonymous"></audio>
-        <audio id="audio38" src="./assets/audio/38.mp3" preload="auto" crossorigin="anonymous"></audio>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -631,6 +623,16 @@
       </a-entity>
 
     </a-scene>
+  </div>
+
+  <!-- Audio Elements Outside A-Frame Assets (Prevents Scene Loading Block on Mobile) -->
+  <div id="audioAssetsPool" style="display: none;" aria-hidden="true">
+    <audio id="audio06" src="./assets/audio/06.mp3" preload="none" crossorigin="anonymous"></audio>
+    <audio id="audio07" src="./assets/audio/07.mp3" preload="none" crossorigin="anonymous"></audio>
+    <audio id="audio08" src="./assets/audio/08.mp3" preload="none" crossorigin="anonymous"></audio>
+    <audio id="audio13" src="./assets/audio/13.mp3" preload="none" crossorigin="anonymous"></audio>
+    <audio id="audio37" src="./assets/audio/37.mp3" preload="none" crossorigin="anonymous"></audio>
+    <audio id="audio38" src="./assets/audio/38.mp3" preload="none" crossorigin="anonymous"></audio>
   </div>
 
   <!-- APPLICATION CONTROLLER SCRIPT (Baisakhi 2026 Engine + Founders Edition) -->
@@ -694,6 +696,21 @@
       // 1. Instant Start Engine function
       let isStarted = false;
 
+      // Ensure camera video stream on iOS Safari has playsinline and webkit-playsinline
+      const videoWatcher = new MutationObserver((mutations) => {
+        mutations.forEach((m) => {
+          m.addedNodes.forEach((node) => {
+            if (node.tagName && node.tagName.toLowerCase() === 'video') {
+              node.setAttribute('playsinline', '');
+              node.setAttribute('webkit-playsinline', '');
+              node.setAttribute('autoplay', '');
+              node.muted = true;
+            }
+          });
+        });
+      });
+      videoWatcher.observe(arContainer || document.body, { childList: true, subtree: true });
+
       const startAREngine = () => {
         if (isStarted) return;
         isStarted = true;
@@ -701,30 +718,71 @@
         homescreen.classList.add('hidden');
         if (permissionScreen) permissionScreen.style.display = 'none';
         if (infoScreen) infoScreen.style.display = 'none';
-        setTimeout(() => {
-          homescreen.style.display = 'none';
-          statusEl.style.display = 'block';
-          arReticle.classList.add('active');
-          arContainer.classList.add('active');
-          if (arReadyFired) {
-            statusEl.innerText = "Scanning... Point at Target Marker";
-          } else {
-            statusEl.innerText = "Initializing AR Camera...";
-          }
-        }, 300);
+        homescreen.style.display = 'none';
+        statusEl.style.display = 'block';
+        arReticle.classList.add('active');
+        arContainer.classList.add('active');
+        if (arReadyFired) {
+          statusEl.innerText = "Scanning... Point at Target Marker";
+        } else {
+          statusEl.innerText = "Initializing AR Camera...";
+        }
 
-        try {
-          if (sceneEl.systems && sceneEl.systems["mindar-image-system"]) {
-            sceneEl.systems["mindar-image-system"].start();
-          } else {
-            sceneEl.addEventListener('loaded', () => {
-              if (sceneEl.systems && sceneEl.systems["mindar-image-system"]) {
-                sceneEl.systems["mindar-image-system"].start();
+        // Bulletproof MindAR Launch (prevents showLoading undefined TypeError on phones)
+        const initAndStartMindAR = () => {
+          const system = sceneEl.systems && sceneEl.systems["mindar-image-system"];
+          if (system) {
+            if (!system.ui) {
+              try {
+                if (typeof system.setup === 'function') {
+                  system.setup({
+                    imageTargetSrc: './mindar-targets/targets.mind',
+                    maxTrack: 1,
+                    showStats: false,
+                    uiLoading: 'no',
+                    uiScanning: 'no',
+                    uiError: 'no'
+                  });
+                }
+              } catch (setupErr) {
+                console.warn("system.setup fallback:", setupErr);
               }
-            }, { once: true });
+            }
+
+            // Ensure ui object and all expected callback methods exist
+            if (!system.ui) {
+              system.ui = {
+                showLoading: () => {},
+                hideLoading: () => {},
+                showScanning: () => {},
+                hideScanning: () => {},
+                showCompatibility: () => {},
+                hideCompatibility: () => {}
+              };
+            } else {
+              const noop = () => {};
+              if (typeof system.ui.showLoading !== 'function') system.ui.showLoading = noop;
+              if (typeof system.ui.hideLoading !== 'function') system.ui.hideLoading = noop;
+              if (typeof system.ui.showScanning !== 'function') system.ui.showScanning = noop;
+              if (typeof system.ui.hideScanning !== 'function') system.ui.hideScanning = noop;
+              if (typeof system.ui.showCompatibility !== 'function') system.ui.showCompatibility = noop;
+              if (typeof system.ui.hideCompatibility !== 'function') system.ui.hideCompatibility = noop;
+            }
+
+            try {
+              system.start();
+            } catch (e) {
+              console.error("MindAR Start Error:", e);
+              statusEl.innerText = "Camera Start Failed — Please Refresh";
+              statusEl.style.background = 'rgba(239, 68, 68, 0.9)';
+            }
           }
-        } catch (e) {
-          console.error("MindAR Start Error:", e);
+        };
+
+        if (sceneEl.systems && sceneEl.systems["mindar-image-system"]) {
+          initAndStartMindAR();
+        } else {
+          sceneEl.addEventListener('loaded', initAndStartMindAR, { once: true });
         }
 
         // Mobile gesture unlock for media
@@ -732,17 +790,23 @@
           const v = document.getElementById(id);
           if (v) {
             v.muted = true;
-            if (v.tagName.toLowerCase() === 'video') v.playsInline = true;
-            let p = v.play();
-            if (p !== undefined) {
-              p.then(() => {
-                if (v !== currentAudio || (currentAudio && currentAudio.paused)) {
-                  v.pause();
-                  v.currentTime = 0;
-                  v.muted = false;
-                }
-              }).catch(() => { });
+            if (v.tagName.toLowerCase() === 'video') {
+              v.playsInline = true;
+              v.setAttribute('playsinline', '');
+              v.setAttribute('webkit-playsinline', '');
             }
+            try {
+              let p = v.play();
+              if (p !== undefined) {
+                p.then(() => {
+                  if (v !== currentAudio || (currentAudio && currentAudio.paused)) {
+                    v.pause();
+                    v.currentTime = 0;
+                    v.muted = false;
+                  }
+                }).catch(() => {});
+              }
+            } catch (e) {}
           }
         });
       };
