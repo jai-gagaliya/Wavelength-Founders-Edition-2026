@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" fill="none">
+  <defs>
+    <radialGradient id="bg1" cx="60%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#1c1611"/>
+      <stop offset="100%" stop-color="#0a0908"/>
+    </radialGradient>
+    <linearGradient id="goldGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f2dfc7"/>
+      <stop offset="50%" stop-color="#c8a97e"/>
+      <stop offset="100%" stop-color="#8e7253"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#bg1)"/>
+  <circle cx="300" cy="180" r="140" stroke="#c8a97e" stroke-width="1" stroke-dasharray="4 8" opacity="0.35"/>
+  <circle cx="300" cy="180" r="100" stroke="#c8a97e" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="300" cy="180" r="60" stroke="#f2dfc7" stroke-width="2" opacity="0.75"/>
+  <ellipse cx="300" cy="180" rx="160" ry="50" stroke="url(#goldGrad1)" stroke-width="2" transform="rotate(-25 300 180)" opacity="0.85"/>
+  <ellipse cx="300" cy="180" rx="160" ry="50" stroke="url(#goldGrad1)" stroke-width="1" transform="rotate(35 300 180)" opacity="0.55"/>
+  <circle cx="300" cy="180" r="14" fill="url(#goldGrad1)"/>
+  <circle cx="300" cy="180" r="28" fill="#c8a97e" opacity="0.2"/>
+  <text x="30" y="358" font-family="'Playfair Display', Georgia, serif" font-size="23" fill="#f3f0e9" font-weight="500">Bohr’s Critique of Einstein</text>
+  <text x="30" y="382" font-family="'DM Mono', monospace" font-size="10.5" fill="#c8a97e" letter-spacing="0.16em">ARTICLE 01 · SATWIK SAMEER</text>
+</svg>

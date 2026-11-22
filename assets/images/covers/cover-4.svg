@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" fill="none">
+  <defs>
+    <radialGradient id="bg4" cx="50%" cy="45%" r="75%">
+      <stop offset="0%" stop-color="#211a14"/>
+      <stop offset="100%" stop-color="#0b0704"/>
+    </radialGradient>
+    <linearGradient id="amberGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fae1ba"/>
+      <stop offset="50%" stop-color="#d89f53"/>
+      <stop offset="100%" stop-color="#8c581a"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#bg4)"/>
+  <polygon points="300,90 370,130 370,210 300,250 230,210 230,130" stroke="url(#amberGrad4)" stroke-width="2" fill="none" opacity="0.8"/>
+  <polygon points="300,115 348,143 348,197 300,225 252,197 252,143" stroke="#fae1ba" stroke-width="1.2" stroke-dasharray="4 4" fill="none" opacity="0.55"/>
+  <circle cx="300" cy="90" r="6" fill="#ffffff"/>
+  <circle cx="370" cy="130" r="6" fill="url(#amberGrad4)"/>
+  <circle cx="370" cy="210" r="6" fill="url(#amberGrad4)"/>
+  <circle cx="300" cy="250" r="6" fill="#ffffff"/>
+  <circle cx="230" cy="210" r="6" fill="url(#amberGrad4)"/>
+  <circle cx="230" cy="130" r="6" fill="url(#amberGrad4)"/>
+  <circle cx="300" cy="170" r="12" fill="url(#amberGrad4)"/>
+  <text x="30" y="358" font-family="'Playfair Display', Georgia, serif" font-size="23" fill="#f3f0e9" font-weight="500">Nobel Prize: Chemistry</text>
+  <text x="30" y="382" font-family="'DM Mono', monospace" font-size="10.5" fill="#d89f53" letter-spacing="0.16em">ARTICLE 04 · TEJAS GULATI</text>
+</svg>

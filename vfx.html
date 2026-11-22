@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>VFX & Augmented Reality — Wavelength Founders' Edition 2026</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"
+    rel="stylesheet" />
+
+  <!-- A-Frame 1.2.0 & MindAR 1.2.3 -->
+  <link rel="preload" href="./mindar-targets/targets.mind" as="fetch" crossorigin="anonymous" />
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.3/dist/mindar-image-aframe.prod.js"></script>
+
+  <!-- Video Overlay Component -->
+  <script>
+    AFRAME.registerComponent('video-overlay', {
+      init: function () {
+        this.videoId = this.el.getAttribute('data-video');
+        this.video = document.getElementById(this.videoId);
+      },
+      show: function () {
+        if (this.video) {
+          this.video.muted = false;
+          this.video.play().catch(e => {
+            console.warn('Playback error unmuted, falling back to muted:', e);
+            this.video.muted = true;
+            this.video.play().catch(err => console.error('Play failed:', err));
+          });
+        }
+      },
+      hide: function () {
+        if (this.video) {
+          this.video.pause();
+          this.video.currentTime = 0;
+        }
+      }
+    });
+  </script>
+
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      width: 100%;
+      position: fixed;
+      background: #0d1e16;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: #f7f3eb;
+    }
+
+    /* ─── TOP NAVIGATION HUD ─── */
+    .ar-nav-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(7, 19, 13, 0.85) 0%, transparent 100%);
+    }
+
+    .nav-btn {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(13, 30, 22, 0.85);
+      border: 1px solid rgba(223, 202, 167, 0.35);
+      border-radius: 4px;
+      color: #f7f3eb;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover {
+      background: rgba(140, 94, 53, 0.4);
+      border-color: #dfcaa7;
+    }
+
+    .brand-pill {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #dfcaa7;
+      padding: 6px 12px;
+      background: rgba(7, 19, 13, 0.7);
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* ─── UI SCREENS (Homescreen, Permission, Info) ─── */
+    #homescreen,
+    #permissionScreen,
+    #infoScreen {
+      position: fixed;
+      inset: 0;
+      background: #091811;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1000;
+      transition: opacity 0.4s ease;
+    }
+
+    #homescreen {
+      justify-content: space-between;
+      padding: 48px 32px 48px;
+      display: flex;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(140, 94, 53, 0.15) 0%, transparent 60%),
+        #091811;
+    }
+
+    #permissionScreen,
+    #infoScreen {
+      justify-content: center;
+      padding: 48px 32px;
+      gap: 24px;
+      background: #091811;
+    }
+
+    .visible {
+      display: flex !important;
+      opacity: 1;
+    }
+
+    .hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Top section */
+    .home-top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .home-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: #dfcaa7;
+      margin-bottom: 18px;
+    }
+
+    .home-logo-img {
+      max-width: 280px;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      margin-bottom: 14px;
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+    }
+
+    .home-divider {
+      width: 48px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #c8a96e, transparent);
+      margin: 16px auto 14px;
+    }
+
+    .home-tagline {
+      font-size: 13.5px;
+      font-weight: 300;
+      color: #a89d88;
+      letter-spacing: 0.04em;
+      line-height: 1.65;
+      max-width: 320px;
+    }
+
+    /* Middle section — badge & marker guide */
+    .home-middle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .home-badge {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      border: 1px solid rgba(200, 169, 110, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: rgba(13, 30, 22, 0.6);
+    }
+
+    .home-badge::before {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border-radius: 50%;
+      border: 1px solid rgba(200, 169, 110, 0.2);
+    }
+
+    .home-badge-icon {
+      width: 36px;
+      height: 36px;
+      color: #dfcaa7;
+    }
+
+    .home-features-chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 340px;
+    }
+
+    .feature-chip {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(223, 202, 167, 0.25);
+      color: #dfcaa7;
+    }
+
+    /* Bottom section */
+    .home-bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .primary-btn {
+      width: 100%;
+      max-width: 320px;
+      padding: 16px 28px;
+      background: #d4b896;
+      color: #1a1510;
+      border: none;
+      border-radius: 4px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 24px rgba(212, 184, 150, 0.25);
+    }
+
+    .primary-btn:hover:not(:disabled) {
+      background: #c8a97e;
+      box-shadow: 0 8px 32px rgba(200, 169, 110, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .primary-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .home-disclaimer {
+      font-size: 11px;
+      color: #6d6455;
+      text-align: center;
+      line-height: 1.5;
+      max-width: 290px;
+    }
+
+    .home-issue-info {
+      font-family: 'DM Mono', monospace;
+      font-size: 9.5px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #554d40;
+    }
+
+    /* Screen icons & text */
+    .perm-icon {
+      width: 68px;
+      height: 68px;
+      border-radius: 16px;
+      background: #11251c;
+      border: 1px solid rgba(223, 202, 167, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #dfcaa7;
+    }
+
+    .perm-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 26px;
+      font-weight: 600;
+      color: #f7f3eb;
+      text-align: center;
+    }
+
+    .perm-subtitle {
+      font-size: 13.5px;
+      font-weight: 300;
+      color: #a89d88;
+      text-align: center;
+      line-height: 1.7;
+      max-width: 300px;
+    }
+
+    .perm-divider {
+      width: 36px;
+      height: 1px;
+      background: #3a3227;
+    }
+
+    /* ─── AR STATUS & RETICLE ─── */
+    #status {
+      position: absolute;
+      top: 76px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(7, 19, 13, 0.85);
+      border: 1px solid rgba(223, 202, 167, 0.3);
+      padding: 8px 18px;
+      border-radius: 999px;
+      color: #f7f3eb;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      z-index: 100;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      display: none;
+      white-space: nowrap;
+      max-width: 90vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: background 0.3s;
+    }
+
+    #arContainer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    #arContainer.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    a-scene {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ─── IN-ENGINE AUDIOBOOK CONTROLS (Baisakhi 2026 Engine Style) ─── */
+    #audioControls {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      display: none;
+    }
+
+    #audioControls.visible {
+      display: flex;
+    }
+
+    .play-audio-btn {
+      background: #d4b896;
+      color: #1a1510;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 30px;
+      font-family: 'DM Mono', monospace;
+      font-weight: 600;
+      font-size: 12.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .play-audio-btn:active {
+      transform: scale(0.96);
+      background: #c8a97e;
+    }
+
+    .play-audio-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Scanning Reticle Guide */
+    .ar-reticle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(70vw, 320px);
+      aspect-ratio: 1 / 1.414;
+      border: 1px dashed rgba(223, 202, 167, 0.4);
+      border-radius: 8px;
+      pointer-events: none;
+      z-index: 50;
+      display: none;
+      transition: border-color 0.3s;
+    }
+
+    .ar-reticle.active {
+      display: block;
+    }
+
+    .ar-reticle.locked {
+      border-color: rgba(34, 197, 94, 0.85);
+      border-style: solid;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="ar-nav-bar">
+    <a href="index.html" class="nav-btn" aria-label="Return to Wavelength Landing Hub">
+      <span>← Back to Hub</span>
+    </a>
+    <div class="brand-pill">
+      <span>Founders' Edition · AR Engine</span>
+    </div>
+  </header>
+
+  <!-- HOMESCREEN -->
+  <div id="homescreen">
+    <div class="home-top">
+      <p class="home-eyebrow">Optical VFX & Augmented Reality</p>
+      <img src="./assets/images/logo.png?v=2026.founders_rev4" alt="Wavelength Logo" class="home-logo-img" />
+      <div class="home-divider"></div>
+      <p class="home-tagline">Point your camera at any magazine page to reveal motion video and stream in-camera
+        audiobooks.</p>
+    </div>
+
+    <div class="home-middle">
+      <div class="home-badge">
+        <svg class="home-badge-icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.6">
+          <rect x="3" y="9" width="30" height="20" rx="3" />
+          <circle cx="18" cy="19" r="5.5" />
+          <path d="M13 9l2-4h6l2 4" stroke-linecap="round" stroke-linejoin="round" />
+          <circle cx="28" cy="13" r="1.5" fill="currentColor" />
+        </svg>
+      </div>
+      <div class="home-features-chips">
+        <span class="feature-chip">Page 30 · VFX Video Overlay</span>
+        <span class="feature-chip">6 Interactive Audiobooks</span>
+        <span class="feature-chip">Continuous Background Audio</span>
+      </div>
+    </div>
+
+    <div class="home-bottom">
+      <button id="getStartedBtn" class="primary-btn">Launch Camera Scanner</button>
+      <p class="home-disclaimer">Camera access is required for image tracking. Video feeds remain local and are never
+        stored or transmitted.</p>
+      <p class="home-issue-info">Wavelength &nbsp;·&nbsp; Founders' Edition &nbsp;·&nbsp; 2026</p>
+    </div>
+  </div>
+
+  <!-- PERMISSION SCREEN -->
+  <div id="permissionScreen">
+    <div class="perm-icon">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+        <circle cx="12" cy="13" r="4"></circle>
+      </svg>
+    </div>
+    <h2 class="perm-title">Camera Permission</h2>
+    <div class="perm-divider"></div>
+    <p class="perm-subtitle">Wavelength AR needs access to your camera to scan page markers and project video and audio
+      overlays.</p>
+    <button id="allowBtn" class="primary-btn">Allow Camera</button>
+  </div>
+
+  <!-- INFORMATION SCREEN -->
+  <div id="infoScreen">
+    <div class="perm-icon">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </div>
+    <h2 class="perm-title">How It Works</h2>
+    <div class="perm-divider"></div>
+    <p class="perm-subtitle">
+      Ensure your sound is turned on.<br /><br />
+      • <strong>Page 30:</strong> Triggers full-motion Navier-Stokes VFX Video directly on page.<br />
+      • <strong>Pages 06, 07, 08, 13, 37, 38:</strong> Unlocks real-time in-camera interactive audiobooks.<br /><br />
+      <em>Audio continues playing even if you look away from the page, until another marker is scanned.</em>
+    </p>
+    <button id="continueBtn" class="primary-btn">Start Scanning</button>
+  </div>
+
+  <!-- LIVE HUD STATUS BAR -->
+  <div id="status">Initializing AR Camera...</div>
+
+  <!-- RETICLE GUIDE -->
+  <div id="arReticle" class="ar-reticle"></div>
+
+  <!-- IN-ENGINE AUDIOBOOK CONTROLLER (Baisakhi 2026 Engine Style) -->
+  <div id="audioControls">
+    <button id="playAudioBtn" class="play-audio-btn">
+      <svg id="iconPlay" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M8 5v14l11-7z" />
+      </svg>
+      <svg id="iconPause" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+      </svg>
+      <span id="playAudioText">Play In-Engine Audiobook</span>
+    </button>
+  </div>
+
+  <!-- AR SCENE CONTAINER -->
+  <div id="arContainer">
+    <a-scene
+      mindar-image="imageTargetSrc: ./mindar-targets/targets.mind; autoStart: false; uiScanning: no; uiError: no; uiLoading: no;"
+      embedded renderer="colorManagement: true; physicallyCorrectLights: true;" vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: true">
+
+      <a-assets timeout="10000">
+        <!-- VFX Video Overlay -->
+        <video id="vid1" src="./assets/videos/Navier-%20Strokes%20VFX.mp4" preload="auto" loop muted playsinline
+          webkit-playsinline crossorigin="anonymous"></video>
+
+        <!-- In-Engine Audiobooks (6 Student / Founder Articles) -->
+        <audio id="audio06" src="./assets/audio/06.mp3" preload="auto" crossorigin="anonymous"></audio>
+        <audio id="audio07" src="./assets/audio/07.mp3" preload="auto" crossorigin="anonymous"></audio>
+        <audio id="audio08" src="./assets/audio/08.mp3" preload="auto" crossorigin="anonymous"></audio>
+        <audio id="audio13" src="./assets/audio/13.mp3" preload="auto" crossorigin="anonymous"></audio>
+        <audio id="audio37" src="./assets/audio/37.mp3" preload="auto" crossorigin="anonymous"></audio>
+        <audio id="audio38" src="./assets/audio/38.mp3" preload="auto" crossorigin="anonymous"></audio>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <!-- Target 0: Page 06 - Physics Nobel Prize (Dhruv Aggarwal) -->
+      <a-entity id="target0" mindar-image-target="targetIndex: 0">
+        <a-plane data-audio="audio06" material="transparent: true; opacity: 0;" position="0 0 0" height="1.4145"
+          width="1.0" rotation="0 0 0"></a-plane>
+      </a-entity>
+
+      <!-- Target 1: Page 07 - Chemistry Nobel Prize (Tejas Gulati) -->
+      <a-entity id="target1" mindar-image-target="targetIndex: 1">
+        <a-plane data-audio="audio07" material="transparent: true; opacity: 0;" position="0 0 0" height="1.4145"
+          width="1.0" rotation="0 0 0"></a-plane>
+      </a-entity>
+
+      <!-- Target 2: Page 08 - Medicine Nobel Prize (Chirag Rajparohit) -->
+      <a-entity id="target2" mindar-image-target="targetIndex: 2">
+        <a-plane data-audio="audio08" material="transparent: true; opacity: 0;" position="0 0 0" height="1.4145"
+          width="1.0" rotation="0 0 0"></a-plane>
+      </a-entity>
+
+      <!-- Target 3: Page 13 - Tesla Roadster Review (Agastya Gupta) -->
+      <a-entity id="target3" mindar-image-target="targetIndex: 3">
+        <a-plane data-audio="audio13" material="transparent: true; opacity: 0;" position="0 0 0" height="1.4145"
+          width="1.0" rotation="0 0 0"></a-plane>
+      </a-entity>
+
+      <!-- Target 4: Page 30 - Navier-Stokes VFX Motion Video Reveal -->
+      <a-entity id="target4" mindar-image-target="targetIndex: 4">
+        <a-plane class="video-overlay" data-video="vid1"
+          material="src: #vid1; shader: flat; side: double; transparent: true;" position="0 0 0" height="1.4145"
+          width="1.0" rotation="0 0 0" video-overlay></a-plane>
+      </a-entity>
+
+      <!-- Target 5: Page 37 - Breaking Point: Einstein Light Box (Shaurya Agarwal) -->
+      <a-entity id="target5" mindar-image-target="targetIndex: 5">
+        <a-plane data-audio="audio37" material="transparent: true; opacity: 0;" position="0 0 0" height="1.4145"
+          width="1.0" rotation="0 0 0"></a-plane>
+      </a-entity>
+
+      <!-- Target 6: Page 38 - Breaking Point: Bohr Model (Satwik Sameer) -->
+      <a-entity id="target6" mindar-image-target="targetIndex: 6">
+        <a-plane data-audio="audio38" material="transparent: true; opacity: 0;" position="0 0 0" height="1.4145"
+          width="1.0" rotation="0 0 0"></a-plane>
+      </a-entity>
+
+    </a-scene>
+  </div>
+
+  <!-- APPLICATION CONTROLLER SCRIPT (Baisakhi 2026 Engine + Founders Edition) -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const getStartedBtn = document.getElementById('getStartedBtn');
+      const homescreen = document.getElementById('homescreen');
+      const permissionScreen = document.getElementById('permissionScreen');
+      const allowBtn = document.getElementById('allowBtn');
+      const infoScreen = document.getElementById('infoScreen');
+      const continueBtn = document.getElementById('continueBtn');
+      const statusEl = document.getElementById('status');
+      const arContainer = document.getElementById('arContainer');
+      const arReticle = document.getElementById('arReticle');
+      const sceneEl = document.querySelector('a-scene');
+
+      const audioControls = document.getElementById('audioControls');
+      const playAudioBtn = document.getElementById('playAudioBtn');
+      const iconPlay = document.getElementById('iconPlay');
+      const iconPause = document.getElementById('iconPause');
+      const playAudioText = document.getElementById('playAudioText');
+
+      let currentAudio = null;
+      let currentAudioIndex = -1;
+      let currentAudioTitle = "";
+      let arReadyFired = false;
+
+      const targetLabels = [
+        "Page 06 · Physics Nobel Prize (Dhruv Aggarwal)",
+        "Page 07 · Chemistry Nobel Prize (Tejas Gulati)",
+        "Page 08 · Medicine Nobel Prize (Chirag Rajparohit)",
+        "Page 13 · Tesla Roadster Review (Agastya Gupta)",
+        "Page 30 · Navier-Stokes VFX Motion Video",
+        "Page 37 · Breaking Point: Einstein (Shaurya Agarwal)",
+        "Page 38 · Breaking Point: Bohr Model (Satwik Sameer)"
+      ];
+
+      const shortTitles = [
+        "Page 06: Physics Nobel",
+        "Page 07: Chemistry Nobel",
+        "Page 08: Medicine Nobel",
+        "Page 13: Tesla Roadster",
+        "Page 30: Navier-Stokes VFX",
+        "Page 37: Einstein Light Box",
+        "Page 38: Bohr Model"
+      ];
+
+      function updateAudioButtonUI(isPlaying) {
+        if (!currentAudioTitle) currentAudioTitle = "Audiobook";
+        if (isPlaying) {
+          playAudioText.innerText = `Pause: ${currentAudioTitle}`;
+          iconPlay.style.display = 'none';
+          iconPause.style.display = 'block';
+        } else {
+          playAudioText.innerText = `Play: ${currentAudioTitle}`;
+          iconPlay.style.display = 'block';
+          iconPause.style.display = 'none';
+        }
+      }
+
+      // 1. Instant Start Engine function
+      let isStarted = false;
+
+      const startAREngine = () => {
+        if (isStarted) return;
+        isStarted = true;
+
+        homescreen.classList.add('hidden');
+        if (permissionScreen) permissionScreen.style.display = 'none';
+        if (infoScreen) infoScreen.style.display = 'none';
+        setTimeout(() => {
+          homescreen.style.display = 'none';
+          statusEl.style.display = 'block';
+          arReticle.classList.add('active');
+          arContainer.classList.add('active');
+          if (arReadyFired) {
+            statusEl.innerText = "Scanning... Point at Target Marker";
+          } else {
+            statusEl.innerText = "Initializing AR Camera...";
+          }
+        }, 300);
+
+        try {
+          if (sceneEl.systems && sceneEl.systems["mindar-image-system"]) {
+            sceneEl.systems["mindar-image-system"].start();
+          } else {
+            sceneEl.addEventListener('loaded', () => {
+              if (sceneEl.systems && sceneEl.systems["mindar-image-system"]) {
+                sceneEl.systems["mindar-image-system"].start();
+              }
+            }, { once: true });
+          }
+        } catch (e) {
+          console.error("MindAR Start Error:", e);
+        }
+
+        // Mobile gesture unlock for media
+        ['vid1', 'audio06', 'audio07', 'audio08', 'audio13', 'audio37', 'audio38'].forEach((id) => {
+          const v = document.getElementById(id);
+          if (v) {
+            v.muted = true;
+            if (v.tagName.toLowerCase() === 'video') v.playsInline = true;
+            let p = v.play();
+            if (p !== undefined) {
+              p.then(() => {
+                if (v !== currentAudio || (currentAudio && currentAudio.paused)) {
+                  v.pause();
+                  v.currentTime = 0;
+                  v.muted = false;
+                }
+              }).catch(() => { });
+            }
+          }
+        });
+      };
+
+      const activateStartButton = () => {
+        getStartedBtn.innerText = "Launch Camera Scanner";
+        getStartedBtn.disabled = false;
+        if (window.location.search.includes('autostart')) {
+          startAREngine();
+        }
+      };
+
+      if (sceneEl.hasLoaded) {
+        activateStartButton();
+      } else {
+        sceneEl.addEventListener('loaded', activateStartButton);
+      }
+
+      getStartedBtn.addEventListener('click', startAREngine);
+      if (allowBtn) allowBtn.addEventListener('click', startAREngine);
+      if (continueBtn) continueBtn.addEventListener('click', startAREngine);
+
+      // 5. In-Engine Audiobook Button Toggle
+      playAudioBtn.addEventListener('click', () => {
+        if (!currentAudio) return;
+
+        if (currentAudio.paused) {
+          currentAudio.muted = false;
+          currentAudio.play().then(() => {
+            updateAudioButtonUI(true);
+            statusEl.innerText = `▶ Playing: ${currentAudioTitle} · Audio continues while you read`;
+            statusEl.style.background = 'rgba(13, 30, 22, 0.9)';
+          }).catch(e => console.error("Audio playback error:", e));
+        } else {
+          currentAudio.pause();
+          updateAudioButtonUI(false);
+          statusEl.innerText = `⏸ Paused: ${currentAudioTitle} · Tap Play to resume`;
+          statusEl.style.background = 'rgba(7, 19, 13, 0.85)';
+        }
+      });
+
+      // Attach ended listener on all audio elements to reset button UI gracefully
+      ['audio06', 'audio07', 'audio08', 'audio13', 'audio37', 'audio38'].forEach((id) => {
+        const a = document.getElementById(id);
+        if (a) {
+          a.addEventListener('ended', () => {
+            updateAudioButtonUI(false);
+            statusEl.innerText = `Finished: ${currentAudioTitle} · Point at any page to explore`;
+            statusEl.style.background = 'rgba(7, 19, 13, 0.85)';
+          });
+        }
+      });
+
+      // 6. AR Ready & Error Listeners
+      sceneEl.addEventListener("arReady", () => {
+        arReadyFired = true;
+        if (infoScreen.style.display === 'none') {
+          if (currentAudio && !currentAudio.paused) {
+            statusEl.innerText = `▶ Playing: ${currentAudioTitle} · Audio continues while you read`;
+            statusEl.style.background = 'rgba(13, 30, 22, 0.9)';
+          } else {
+            statusEl.innerText = "Scanning... Point at Target Marker";
+          }
+        }
+      });
+
+      sceneEl.addEventListener("arError", () => {
+        statusEl.innerText = "Camera Denied - Please Refresh";
+        statusEl.style.background = 'rgba(239, 68, 68, 0.9)';
+      });
+
+      // 7. Target Scanning Logic for Targets 0 through 6 (Continuous Audio Mode)
+      for (let i = 0; i < 7; i++) {
+        const targetEntity = document.getElementById('target' + i);
+        if (!targetEntity) continue;
+
+        targetEntity.addEventListener('targetFound', () => {
+          arReticle.classList.add('locked');
+
+          // -------------------------------------------------------------
+          // TARGET 4: PAGE 30 - Navier-Stokes VFX Motion Video Reveal
+          // -------------------------------------------------------------
+          if (i === 4) {
+            // Stop and pause any playing audiobook when pointing to the VFX page!
+            if (currentAudio) {
+              currentAudio.pause();
+              currentAudio.currentTime = 0;
+              updateAudioButtonUI(false);
+            }
+            audioControls.classList.remove('visible');
+
+            // Show and play video overlay
+            const overlay = targetEntity.querySelector('[video-overlay]');
+            if (overlay && overlay.components && overlay.components['video-overlay']) {
+              overlay.components['video-overlay'].show();
+            }
+            const vid = document.getElementById('vid1');
+            if (vid) {
+              vid.muted = false;
+              vid.play().catch(e => {
+                vid.muted = true;
+                vid.play().catch(err => console.error(err));
+              });
+            }
+
+            statusEl.innerText = `✓ ${targetLabels[4]} Detected`;
+            statusEl.style.background = 'rgba(34, 197, 94, 0.92)';
+            return;
+          }
+
+          // -------------------------------------------------------------
+          // TARGETS 0, 1, 2, 3, 5, 6: In-Engine AR Audiobook Pages
+          // -------------------------------------------------------------
+          // If the VFX video overlay was playing, hide and stop it
+          const vidOverlay = document.querySelector('[video-overlay]');
+          if (vidOverlay && vidOverlay.components['video-overlay']) {
+            vidOverlay.components['video-overlay'].hide();
+          }
+          const vidEl = document.getElementById('vid1');
+          if (vidEl) { vidEl.pause(); }
+
+          const aOverlay = targetEntity.querySelector('[data-audio]');
+          if (!aOverlay) return;
+
+          const newAudio = document.getElementById(aOverlay.getAttribute('data-audio'));
+          if (!newAudio) return;
+
+          const isNewPage = (currentAudioIndex !== i);
+          const wasPlaying = (currentAudio && !currentAudio.paused);
+
+          if (isNewPage) {
+            // Stop previous audio if switching to a different page
+            if (currentAudio && currentAudio !== newAudio) {
+              currentAudio.pause();
+              currentAudio.currentTime = 0;
+            }
+
+            currentAudio = newAudio;
+            currentAudioIndex = i;
+            currentAudioTitle = shortTitles[i] || targetLabels[i];
+
+            // Always make audiobook controls visible
+            audioControls.classList.add('visible');
+
+            if (wasPlaying) {
+              // User was already listening, so seamlessly start the new article's audiobook!
+              currentAudio.muted = false;
+              currentAudio.play().then(() => {
+                updateAudioButtonUI(true);
+                statusEl.innerText = `▶ Playing: ${currentAudioTitle} · Audio continues while you read`;
+                statusEl.style.background = 'rgba(34, 197, 94, 0.92)';
+              }).catch(e => {
+                console.warn("Autoplay error on page switch:", e);
+                updateAudioButtonUI(false);
+                statusEl.innerText = `✓ ${targetLabels[i]} Detected`;
+                statusEl.style.background = 'rgba(34, 197, 94, 0.92)';
+              });
+            } else {
+              // Not previously playing: cue up with Play button
+              updateAudioButtonUI(false);
+              statusEl.innerText = `✓ ${targetLabels[i]} Detected`;
+              statusEl.style.background = 'rgba(34, 197, 94, 0.92)';
+            }
+          } else {
+            // Pointed back at the SAME page
+            audioControls.classList.add('visible');
+            if (currentAudio && !currentAudio.paused) {
+              updateAudioButtonUI(true);
+              statusEl.innerText = `▶ Playing: ${currentAudioTitle} (Page in View)`;
+              statusEl.style.background = 'rgba(34, 197, 94, 0.92)';
+            } else {
+              updateAudioButtonUI(false);
+              statusEl.innerText = `✓ ${targetLabels[i]} Detected`;
+              statusEl.style.background = 'rgba(34, 197, 94, 0.92)';
+            }
+          }
+        });
+
+        targetEntity.addEventListener('targetLost', () => {
+          arReticle.classList.remove('locked');
+
+          // If Target 4 (Video) lost
+          if (i === 4) {
+            const overlay = targetEntity.querySelector('[video-overlay]');
+            if (overlay && overlay.components && overlay.components['video-overlay']) {
+              overlay.components['video-overlay'].hide();
+            }
+            const vid = document.getElementById('vid1');
+            if (vid) {
+              vid.pause();
+              vid.currentTime = 0;
+            }
+            statusEl.innerText = "Scanning... Point at Target Marker";
+            statusEl.style.background = 'rgba(7, 19, 13, 0.85)';
+            return;
+          }
+
+          // Audiobook Page lost:
+          // CONTINUOUS AUDIOBOOK LOGIC:
+          // If the user has started listening to the audiobook and moves the camera away,
+          // KEEP THE AUDIO PLAYING uninterrupted until they point at another page or VFX!
+          if (currentAudio && !currentAudio.paused) {
+            // Audio continues playing!
+            // Keep controls visible so user can pause or resume anytime while reading the magazine
+            audioControls.classList.add('visible');
+            updateAudioButtonUI(true);
+            statusEl.innerText = `▶ Playing: ${currentAudioTitle} · Audio continues while you read`;
+            statusEl.style.background = 'rgba(13, 30, 22, 0.9)';
+          } else {
+            statusEl.innerText = "Scanning... Point at Target Marker";
+            statusEl.style.background = 'rgba(7, 19, 13, 0.85)';
+          }
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>

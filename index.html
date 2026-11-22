@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#f6f1e8" />
+  <title>Wavelength — Founders' Edition 2026 · Digital & Augmented Reality Companion</title>
+  <meta name="description"
+    content="The official digital companion for Wavelength Founders' Edition 2026. Featuring the White House Grand Prix 3D game, studio AI-Narration audiobooks, and MindAR optical VFX video and audio experiences." />
+
+  <!-- Google Fonts: Inter, Playfair Display, DM Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap"
+    rel="stylesheet" />
+
+  <!-- Base & Editorial Stylesheets -->
+  <link rel="stylesheet" href="./css/styles.css?v=2026.founders2" />
+  <link rel="stylesheet" href="./css/audio.css?v=2026.founders2" />
+
+  <!-- Background AR Engine Preloading (Instant AR Scanner) -->
+  <link rel="preconnect" href="https://aframe.io" crossorigin />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="preload" href="https://aframe.io/releases/1.2.0/aframe.min.js" as="script" />
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/mind-ar@1.2.3/dist/mindar-image-aframe.prod.js" as="script" />
+  <link rel="prefetch" href="./mindar-targets/targets.mind" as="fetch" crossorigin="anonymous" />
+  <link rel="prefetch" href="./vfx.html" as="document" />
+</head>
+
+<body class="editorial-body">
+  <div class="page-container">
+
+    <!-- Editorial Masthead Header -->
+    <header class="site-header" role="banner">
+      <div class="header-inner">
+        <div class="brand-lockup">
+          <a href="index.html" class="brand-link" aria-label="Wavelength Magazine Home">
+            <img class="brand-logo-img" src="./assets/images/logo.png?v=2026.founders_rev4" alt="Wavelength Logo" />
+          </a>
+          <div class="edition-specifier">
+            <span class="specifier-badge dynamic-edition">Founders' Edition 2026</span>
+          </div>
+        </div>
+
+        <!-- Quick Editorial Direct Navigation -->
+        <nav class="masthead-nav" aria-label="Primary Destinations">
+          <a href="#game-section" class="masthead-nav-link">
+            <span>The Game</span>
+            <span class="nav-tag-badge">3D</span>
+          </a>
+          <a href="#audio-section" class="masthead-nav-link">
+            <span>Audiobooks</span>
+            <span class="nav-count-badge">6</span>
+          </a>
+          <a href="#vfx-section" class="masthead-nav-link">
+            <span>VFX Hub</span>
+            <span class="nav-tag-badge">AR</span>
+          </a>
+          <a href="#editorial-board" class="masthead-nav-link">
+            <span>Editorial Board</span>
+          </a>
+          <a href="vfx.html" class="masthead-action-pill">
+            <span>Launch AR</span>
+            <span class="pill-arrow" aria-hidden="true">→</span>
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="landing-main" role="main">
+
+      <!-- Hero Section: Expansive Editorial Spread -->
+      <section class="hero-section" aria-labelledby="hero-title">
+        <div class="hero-editorial-grid">
+
+          <div class="hero-text-column">
+            <div class="hero-kicker">
+              <span class="kicker-index">FOUNDERS' 2026</span>
+              <span class="kicker-dash" aria-hidden="true">—</span>
+              <span class="kicker-theme">Digital &amp; Augmented Reality</span>
+            </div>
+
+            <h1 id="hero-title" class="hero-title">
+              Beyond the <em>Printed</em> Page.
+            </h1>
+
+            <p class="hero-lede">
+              This digital companion expands our bound publication across three distinct dimensions: race the 3D White House Grand Prix circuit set across the White House Lawn and the Jr. School, stream studio AI-Narration audiobooks directly on the page, or launch the optical WebAR camera to unlock motion VFX video reveals and in-engine acoustic narration through a single, unified scanner.
+            </p>
+
+            <!-- Three Pathway Portals -->
+            <div class="hero-portals-trio">
+              <!-- Pathway 1: The Game -->
+              <a href="#game-section" class="portal-cta-box game-portal" aria-label="Go to White House Grand Prix Game">
+                <div class="portal-box-top">
+                  <span class="portal-box-num">01 / 3D RACER</span>
+                  <span class="portal-box-tag">3D Circuit</span>
+                </div>
+                <h2 class="portal-box-title">White House Grand Prix</h2>
+                <p class="portal-box-desc">
+                  3D physics racing around the White House Lawn and the Jr. School with 4 campus vehicles.
+                </p>
+                <div class="portal-box-action">
+                  <span>Enter Grand Prix</span>
+                  <svg class="portal-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </div>
+              </a>
+
+              <!-- Pathway 2: Audiobooks (Kind 1: On-Page Player) -->
+              <a href="#audio-section" class="portal-cta-box audio-portal" id="heroPortalAudio"
+                aria-label="Go to Audiobook Library">
+                <div class="portal-box-top">
+                  <span class="portal-box-num">02 / AUDIOBOOKS</span>
+                  <span class="portal-box-tag">6 Articles · Studio</span>
+                </div>
+                <h2 class="portal-box-title">The Audiobook Library</h2>
+                <p class="portal-box-desc">
+                  Studio AI-Narration with continuous playback, waveform seeking, and single-stream listening.
+                </p>
+                <div class="portal-box-action">
+                  <span>Listen on Page</span>
+                  <svg class="portal-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </div>
+              </a>
+
+              <!-- Pathway 3: VFX / AR Hub (Kind 2: On VFX Engine) -->
+              <a href="#vfx-section" class="portal-cta-box vfx-portal" id="heroPortalVfx"
+                aria-label="Go to VFX and Augmented Reality Hub">
+                <div class="portal-box-top">
+                  <span class="portal-box-num">03 / OPTICAL AR</span>
+                  <span class="portal-box-tag">Single Engine</span>
+                </div>
+                <h2 class="portal-box-title">VFX AR Video & Engine</h2>
+                <p class="portal-box-desc">
+                  One unified scanner box for both motion video overlays and in-camera floating audiobooks.
+                </p>
+                <div class="portal-box-action">
+                  <span>Launch AR Hub</span>
+                  <svg class="portal-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </div>
+              </a>
+            </div>
+
+            <!-- Tactile Magazine Hint -->
+            <div class="hero-print-hint">
+              <span class="hint-bullet" aria-hidden="true"></span>
+              <p>
+                <strong>Reading the physical Founders' issue?</strong> Scan any page marker with your device's camera to
+                experience real-time motion overlays and in-engine audiobooks through our single WebAR scanner.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           SECTION 1: THE GAME — WHITE HOUSE GRAND PRIX
+           ===================================================================== -->
+      <section id="game-section" class="editorial-section game-showcase-section" aria-labelledby="game-section-title">
+        <div class="section-masthead">
+          <div class="section-headline-row">
+            <div>
+              <span class="hero-kicker" style="margin-bottom: 4px;">01 / 3D RACING GAME</span>
+              <h2 id="game-section-title" class="section-title">White House Grand Prix</h2>
+              <p class="section-subtext">
+                The setting of the game is the White House Lawn and the Jr. School. High-octane 3D physics-driven racing powered by Three.js and Cannon.js.
+              </p>
+            </div>
+            <a href="./white-house-grand-prix/index.html?start=name" target="_blank" class="section-view-all-btn">
+              <span>Launch Fullscreen Race</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Featured Banner -->
+        <div class="game-hero-banner">
+          <div class="game-hero-banner-inner">
+            <img class="game-hero-bg" src="./assets/images/game/white-house-grand-prix-hero.jpg"
+              alt="White House Grand Prix Hero Track" />
+            <div class="game-hero-overlay"></div>
+            <div class="game-hero-content">
+              <span class="game-hero-kicker">White House Lawn &amp; Jr. School Circuit</span>
+              <h3 class="game-hero-title">White House Grand Prix</h3>
+              <p class="game-hero-desc">
+                The race course sweeps through the White House Lawn and the Jr. School. Select your vehicle from our
+                school fleet, master high-speed drifts past the colonnade, and compete across 3 laps for the Founders'
+                Cup.
+              </p>
+              <div class="game-hero-actions">
+                <button type="button" class="btn-game-primary" id="btnLaunchHeroRace"
+                  onclick="document.getElementById('btnStartEngine').click(); document.getElementById('gameConsoleFrame').scrollIntoView({behavior: 'smooth'});">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                  <span>Play In Arcade Frame</span>
+                </button>
+                <a href="./white-house-grand-prix/index.html?start=name" target="_blank" class="btn-game-secondary">
+                  <span>Open Fullscreen Window ↗</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Deck: Arcade Frame & Vehicle Fleet Panel -->
+        <div class="game-interactive-deck">
+
+          <!-- Playable Arcade Frame -->
+          <div class="game-arcade-frame" id="gameConsoleFrame">
+            <div class="arcade-top-bar">
+              <div class="arcade-dots">
+                <span class="arcade-dot red"></span>
+                <span class="arcade-dot amber"></span>
+                <span class="arcade-dot green"></span>
+              </div>
+              <span>White House Grand Prix · Arcade Console</span>
+              <span style="color: var(--accent);">3 Laps · 60 FPS</span>
+            </div>
+
+            <div class="game-iframe-wrapper">
+              <iframe id="gameIframe" class="game-iframe" src="about:blank" title="White House Grand Prix 3D Game"
+                allow="autoplay"></iframe>
+
+              <!-- Poster Overlay Before Launch -->
+              <div class="game-poster-overlay" id="gamePosterOverlay"
+                style="background-image: url('./assets/images/game/game-render.jpg');">
+                <div class="poster-vignette"></div>
+                <div class="poster-content">
+                  <span class="poster-badge">3D Physics Simulation Active</span>
+                  <h4 class="poster-title">Ready on the Starting Grid?</h4>
+                  <p class="poster-subtitle">
+                    Race against 3 AI school drivers through the White House Lawn and the Jr. School with authentic
+                    engine acoustics and drift dynamics.
+                  </p>
+                  <button type="button" class="btn-poster-launch" id="btnStartEngine">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    <span>Start Engine &amp; Race</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vehicle Fleet Showcase Panel -->
+          <div class="game-fleet-panel">
+            <div>
+              <div class="fleet-panel-header">
+                <h4 class="fleet-title">Campus Racing Fleet</h4>
+                <span class="fleet-count">04 Campus Vehicles</span>
+              </div>
+
+              <!-- Selector Buttons (No Hashtags) -->
+              <div class="vehicle-selector-bar" role="tablist" aria-label="Select vehicle to inspect">
+                <button type="button" class="vehicle-card-btn is-active" data-vehicle-id="ambassador" role="tab"
+                  aria-selected="true">
+                  <span class="vehicle-btn-num">01</span>
+                  <span class="vehicle-btn-name">Ambassador</span>
+                </button>
+                <button type="button" class="vehicle-card-btn" data-vehicle-id="rickshaw" role="tab"
+                  aria-selected="false">
+                  <span class="vehicle-btn-num">02</span>
+                  <span class="vehicle-btn-name">Auto-Rickshaw</span>
+                </button>
+                <button type="button" class="vehicle-card-btn" data-vehicle-id="carriage" role="tab"
+                  aria-selected="false">
+                  <span class="vehicle-btn-num">03</span>
+                  <span class="vehicle-btn-name">Carriage</span>
+                </button>
+                <button type="button" class="vehicle-card-btn" data-vehicle-id="jeep" role="tab" aria-selected="false">
+                  <span class="vehicle-btn-num">04</span>
+                  <span class="vehicle-btn-name">Jeep</span>
+                </button>
+              </div>
+
+              <!-- Improved Vehicle Stage & Top Speed Callout Box -->
+              <div class="vehicle-stage-box">
+                <div class="vehicle-spec-header">
+                  <div class="vehicle-title-col">
+                    <div class="vehicle-badge-row">
+                      <span class="vehicle-num-tag" id="vehicleActiveNum">01</span>
+                      <span class="vehicle-badge-pill" id="vehicleActiveBadge">Staff Classic</span>
+                    </div>
+                    <h5 class="vehicle-info-name" id="vehicleActiveName">Vintage Ambassador</h5>
+                  </div>
+                  <div class="vehicle-speed-badge">
+                    <span class="speed-label">TOP SPEED</span>
+                    <div class="speed-value-row">
+                      <span class="speed-number" id="vehicleTopSpeedVal">142</span>
+                      <span class="speed-unit" id="vehicleTopSpeedUnit">KM/H</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="vehicle-showcase-row">
+                  <div class="vehicle-stage-img-wrap">
+                    <img id="vehicleActiveImg" src="./assets/images/game/ambassador.jpg" alt="Active Vehicle Preview" />
+                  </div>
+                  <div class="vehicle-showcase-desc">
+                    <p class="vehicle-info-tagline" id="vehicleActiveTagline">The marvel of Indian roads. Balanced,
+                      dignified, unstoppable.</p>
+                    <div class="vehicle-spec-pills">
+                      <span class="spec-pill"><strong>0-100:</strong> <span id="vehicleAccelSecVal">3.8s</span></span>
+                      <span class="spec-pill"><strong>Class:</strong> Campus RWD</span>
+                      <span class="spec-pill"><strong>Circuit:</strong> White House Lawn &amp; Jr. School</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Enhanced Stats Meters Grid -->
+              <div class="vehicle-stats-grid">
+                <div class="stat-item">
+                  <div class="stat-label-row">
+                    <span>Top Speed Rating</span>
+                    <span class="stat-val-text" id="statSpeedPct">88%</span>
+                  </div>
+                  <div class="stat-track">
+                    <div class="stat-fill" id="statSpeed" style="width: 88%;"></div>
+                  </div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-label-row">
+                    <span>Acceleration</span>
+                    <span class="stat-val-text" id="statAccelPct">78%</span>
+                  </div>
+                  <div class="stat-track">
+                    <div class="stat-fill" id="statAccel" style="width: 78%;"></div>
+                  </div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-label-row">
+                    <span>Drift Agility</span>
+                    <span class="stat-val-text" id="statDriftPct">85%</span>
+                  </div>
+                  <div class="stat-track">
+                    <div class="stat-fill" id="statDrift" style="width: 85%;"></div>
+                  </div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-label-row">
+                    <span>Handling Response</span>
+                    <span class="stat-val-text" id="statHandlingPct">82%</span>
+                  </div>
+                  <div class="stat-track">
+                    <div class="stat-fill" id="statHandling" style="width: 82%;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Improved Mobile-First Controls Bar -->
+            <div class="game-controls-bar">
+              <div class="controls-mobile-deck">
+                <div class="mobile-badge-group">
+                  <span class="mobile-indicator-pill">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                      <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                    </svg>
+                    <span>Mobile Touch Controls</span>
+                  </span>
+                </div>
+                <div class="touch-control-badges">
+                  <span class="touch-chip">🕹️ <strong>Steer:</strong> Touch Left / Right</span>
+                  <span class="touch-chip">⚡ <strong>Gas &amp; Brake:</strong> Touch Pedals</span>
+                  <span class="touch-chip">💨 <strong>Drift &amp; Boost:</strong> Thumb Buttons</span>
+                </div>
+              </div>
+
+              <div class="controls-desktop-row">
+                <span class="desktop-tag">Desktop:</span>
+                <span>Drive: <span class="key-pill">W</span><span class="key-pill">A</span><span
+                    class="key-pill">S</span><span class="key-pill">D</span> / <span class="key-pill">↑</span><span
+                    class="key-pill">←</span><span class="key-pill">↓</span><span class="key-pill">→</span></span>
+                <span>Drift: <span class="key-pill">Space</span></span>
+                <span>Boost: <span class="key-pill">Shift</span></span>
+                <span>Reset: <span class="key-pill">R</span></span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Telemetry Strip (Correct Racing Flag Icon & Proper Setting Text) -->
+        <div class="game-telemetry-strip">
+          <div class="telemetry-item">
+            <div class="telemetry-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                <line x1="4" y1="22" x2="4" y2="15"></line>
+              </svg>
+            </div>
+            <div>
+              <div class="telemetry-label">Circuit Course</div>
+              <div class="telemetry-val">The White House Lawn &amp; Jr. School</div>
+            </div>
+          </div>
+          <div class="telemetry-item">
+            <div class="telemetry-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <div>
+              <div class="telemetry-label">Race Format</div>
+              <div class="telemetry-val">3 Laps · Dynamic AI Racers · Best Lap Record</div>
+            </div>
+          </div>
+          <div class="telemetry-item">
+            <div class="telemetry-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+            </div>
+            <div>
+              <div class="telemetry-label">Audio &amp; Physics</div>
+              <div class="telemetry-val">Cannon.js Rigid Bodies &amp; Synthesized Engine Sound</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           SECTION 2: THE AUDIOBOOK LIBRARY (KIND 1: ON-PAGE PLAYER)
+           ===================================================================== -->
+      <section id="audio-section" class="editorial-section audio-showcase-section"
+        aria-labelledby="audio-section-title">
+        <div class="section-masthead">
+          <div class="section-headline-row">
+            <div>
+              <span class="hero-kicker" style="margin-bottom: 4px;">02 / STUDIO AUDIO ARCHIVES</span>
+              <h2 id="audio-section-title" class="section-title">The Audiobook Library</h2>
+              <p class="section-subtext">
+                Studio-quality AI-Narration with continuous playback, waveform seeking, and single-stream enforcement
+                (Kind 1: On-Page Player).
+              </p>
+            </div>
+            <a href="audiobooks.html" class="section-view-all-btn">
+              <span>Open Dedicated Audio Page</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Global Status Bar -->
+        <div class="audio-global-status" style="margin-bottom: 28px;" aria-live="polite">
+          <span class="now-playing-dot" aria-hidden="true"></span>
+          <span id="nowPlayingStatus">Select an article below to begin playback</span>
+        </div>
+
+        <!-- Dynamic Audiobook Cards Grid (Populated by js/audio.js) -->
+        <div class="audio-articles-grid" id="audioArticlesGrid" aria-label="Audiobook Articles List">
+          <noscript>
+            <div
+              style="padding: 24px; border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--gold);">
+              Please enable JavaScript to access the custom audio player and narrated audiobooks.
+            </div>
+          </noscript>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           SECTION 3: OPTICAL VFX & AUGMENTED REALITY (ONE UNIFIED SCANNER BOX)
+           ===================================================================== -->
+      <section id="vfx-section" class="editorial-section vfx-showcase-section" aria-labelledby="vfx-section-title">
+        <div class="section-masthead">
+          <div class="section-headline-row">
+            <div>
+              <span class="hero-kicker" style="margin-bottom: 4px;">03 / OPTICAL VFX &amp; AUGMENTED REALITY</span>
+              <h2 id="vfx-section-title" class="section-title">VFX AR Video &amp; In-Engine Audiobooks</h2>
+              <p class="section-subtext">
+                Powered by a single, unified MindAR 1.2.3 &amp; A-Frame camera engine. Avoids lag by running one optical
+                scanner that seamlessly handles both motion video reveals and in-engine audiobooks.
+              </p>
+            </div>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+              <a href="vfx.html" class="section-view-all-btn" style="background: var(--accent); color: #fff;">
+                <span>Launch AR Scanner</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- One Unified Scanner Box (Single Engine) -->
+        <div class="unified-scanner-card">
+          <div class="unified-scanner-header">
+            <div>
+              <div class="unified-scanner-badge-row">
+                <span class="unified-engine-pill">Single Optical Engine · WebAR Active</span>
+                <span style="font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-dim);">MindAR 1.2.3
+                  &amp; A-Frame</span>
+              </div>
+              <h3 class="unified-scanner-title">All-in-One Magazine Scanner</h3>
+            </div>
+          </div>
+
+          <p class="unified-scanner-desc">
+            A single, ultra-lightweight client-side camera engine powers both digital experiences without lag or double
+            loading. Point your camera at any magazine marker to activate:
+          </p>
+
+          <div class="unified-capabilities-grid">
+            <!-- Feature 1: VFX Video Reveal -->
+            <div class="capability-column">
+              <div class="capability-icon-badge" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+              <div class="capability-info">
+                <span class="capability-tag">Page 30 · Visual Motion Overlay</span>
+                <h4 class="capability-title">Full-Motion Video Overlay</h4>
+                <p class="capability-text">
+                  Projects the Navier-Stokes VFX motion sequence directly anchored atop Page 30 with synchronized sound.
+                </p>
+              </div>
+            </div>
+
+            <!-- Feature 2: In-Engine Audiobook -->
+            <div class="capability-column">
+              <div class="capability-icon-badge" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+                  <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+                </svg>
+              </div>
+              <div class="capability-info">
+                <span class="capability-tag">Pages 06, 07, 08, 13, 37, 38 · In-Engine Acoustic</span>
+                <h4 class="capability-title">In-Camera Floating Audiobook</h4>
+                <p class="capability-text">
+                  Surfaces the floating AR Play/Pause HUD across all 6 feature articles. Audio continues playing seamlessly in the background as you read, even when moving your camera away, until you scan another article or the VFX video.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Unified Action Row -->
+          <div class="unified-scanner-actions">
+            <a href="vfx.html" class="btn-game-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+              </svg>
+              <span>Launch AR Scanner</span>
+            </a>
+            <span
+              style="font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-dim); margin-left: auto;">
+              No native app download required · Runs directly in mobile Safari / Chrome
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           SECTION 4: EDITORIAL BOARD (EXACT MATCH TO ATTACHED PHOTO)
+           ===================================================================== -->
+      <section id="editorial-board" class="editorial-board-section" aria-labelledby="editorial-board-title">
+        <div class="editorial-board-plate">
+
+          <div class="editorial-board-header">
+            <div class="masthead-divider-wave" aria-hidden="true">
+              <svg viewBox="0 0 320 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 6 Q 16 0, 32 6 T 64 6 T 96 6 T 128 6 T 160 6 T 192 6 T 224 6 T 256 6 T 288 6 T 320 6"
+                  stroke="var(--accent)" stroke-width="1.5" fill="none" />
+              </svg>
+            </div>
+            <h2 id="editorial-board-title" class="masthead-main-title">EDITORIAL BOARD</h2>
+            <div class="masthead-divider-wave" aria-hidden="true">
+              <svg viewBox="0 0 320 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 6 Q 16 0, 32 6 T 64 6 T 96 6 T 128 6 T 160 6 T 192 6 T 224 6 T 256 6 T 288 6 T 320 6"
+                  stroke="var(--accent)" stroke-width="1.5" fill="none" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Three-Column Editorial Board Grid (Matching Attached Official Layout) -->
+          <div class="masthead-columns-grid">
+
+            <!-- Column 1 (Left) -->
+            <div class="masthead-col">
+              <div class="masthead-group">
+                <h3 class="masthead-role-label">Editor-in-Chief</h3>
+                <ul class="masthead-names-list">
+                  <li>Koustabh Gupta</li>
+                </ul>
+              </div>
+
+              <div class="masthead-group">
+                <h3 class="masthead-role-label">Editors</h3>
+                <ul class="masthead-names-list">
+                  <li>Nirbhay R. Shrotriya</li>
+                  <li>Jai Gagaliya</li>
+                  <li>Eshaan Tiwari</li>
+                  <li>Agastya Gupta</li>
+                  <li>Vihaan Harlalka</li>
+                </ul>
+              </div>
+
+              <div class="masthead-group">
+                <h3 class="masthead-role-label">Teacher-in-Charge</h3>
+                <ul class="masthead-names-list">
+                  <li>Ms. Anamika Saxena</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Column 2 (Middle) -->
+            <div class="masthead-col">
+              <div class="masthead-group">
+                <h3 class="masthead-role-label">Senior Editors</h3>
+                <ul class="masthead-names-list">
+                  <li>Nilesh Gupta</li>
+                  <li>Kushagra Gupta</li>
+                  <li>Hridaiveer Singh</li>
+                </ul>
+              </div>
+
+              <div class="masthead-group">
+                <h3 class="masthead-role-label">Correspondents</h3>
+                <ul class="masthead-names-list">
+                  <li>Garvit Agrawal</li>
+                  <li>Archit Shekhar</li>
+                  <li>Dhruv Agarwal</li>
+                  <li>Priyansh Baluni</li>
+                  <li>Ranveer Madan</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Column 3 (Right) -->
+            <div class="masthead-col">
+              <div class="masthead-group">
+                <h3 class="masthead-role-label">VFX Artist</h3>
+                <ul class="masthead-names-list">
+                  <li>Jai Gagaliya</li>
+                </ul>
+              </div>
+
+              <div class="masthead-group">
+                <h3 class="masthead-role-label">Creative Editors</h3>
+                <ul class="masthead-names-list">
+                  <li>Jai Gagaliya</li>
+                  <li>Gitansh Pawar</li>
+                </ul>
+              </div>
+
+              <div class="masthead-group">
+                <h3 class="masthead-role-label">Special Thanks</h3>
+                <ul class="masthead-names-list">
+                  <li>Dr. Vandana Pathak</li>
+                  <li>Mr. Girish Prasad</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Editorial Site Footer -->
+    <footer class="site-footer" role="contentinfo">
+      <div class="footer-inner">
+        <div class="footer-left">
+          <span class="footer-brand"><span class="dynamic-mag-title">Wavelength</span> · <span
+              class="dynamic-edition">Founders' Edition 2026</span></span>
+          <span class="footer-tagline">Print, Motion &amp; Acoustic Synthesis.</span>
+        </div>
+
+        <nav class="footer-nav" aria-label="Footer Navigation">
+          <a href="#game-section" class="footer-link">The Game</a>
+          <a href="#audio-section" class="footer-link">Audiobooks</a>
+          <a href="#vfx-section" class="footer-link">VFX AR Hub</a>
+          <a href="#editorial-board" class="footer-link">Editorial Board</a>
+          <a href="#hero-title" class="footer-link">Back to Top ↑</a>
+        </nav>
+      </div>
+
+      <div class="footer-subrow">
+        <div class="footer-publication-colophon">
+          <p class="pub-brand-line">Wavelength@2026</p>
+          <p class="pub-meta-line">
+            Published By : Ms. Sangeeta Kain, Principal Welham Boys’ School,<br />
+            5, Circular Road, Dalanwala, Dehradun 248001, Uttarakhand, India
+          </p>
+          <p class="pub-disclaimer-line">
+            The views in the Magazine are of the contributors and do not necessarily
+            represent the views of the Magazine and the School. Reproduction in whole or in part without
+            permission is strictly prohibited.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="./js/config.js?v=2026.founders2"></script>
+  <script src="./js/main.js?v=2026.founders2"></script>
+  <script src="./js/audio.js?v=2026.founders2"></script>
+
+  <!-- Background AR Engine Preloader: Pre-caches MindAR, targets.mind & video for instant AR launch -->
+  <script>
+    (function prewarmAREngine() {
+      function startPreload() {
+        try {
+          // Pre-cache the 6.9MB targets.mind in browser HTTP cache
+          fetch('./mindar-targets/targets.mind', { mode: 'cors' }).catch(function () { });
+          // Pre-cache vfx.html
+          fetch('./vfx.html').catch(function () { });
+          // Pre-cache video stream header
+          fetch('./assets/videos/30.mp4', { headers: { Range: 'bytes=0-1048576' } }).catch(function () { });
+        } catch (e) { }
+      }
+      if (document.readyState === 'complete') {
+        setTimeout(startPreload, 200);
+      } else {
+        window.addEventListener('load', function () {
+          setTimeout(startPreload, 200);
+        });
+      }
+    })();
+  </script>
+</body>
+
+</html>

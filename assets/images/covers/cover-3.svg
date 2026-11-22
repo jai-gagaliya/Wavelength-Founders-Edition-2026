@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" fill="none">
+  <defs>
+    <radialGradient id="bg3" cx="50%" cy="50%" r="80%">
+      <stop offset="0%" stop-color="#111a14"/>
+      <stop offset="100%" stop-color="#080c09"/>
+    </radialGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#bg3)"/>
+  <path d="M80 200 Q180 80 300 170 T520 140" stroke="#93bd86" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M120 240 Q220 120 340 210 T560 170" stroke="#bce3b1" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <circle cx="260" cy="140" r="42" stroke="#93bd86" stroke-width="1.5" fill="none" opacity="0.7" stroke-dasharray="3 5"/>
+  <circle cx="360" cy="180" r="58" stroke="#bce3b1" stroke-width="1" fill="none" opacity="0.5"/>
+  <circle cx="260" cy="140" r="6" fill="#bce3b1"/>
+  <circle cx="360" cy="180" r="8" fill="#93bd86"/>
+  <text x="30" y="358" font-family="'Playfair Display', Georgia, serif" font-size="23" fill="#f3f0e9" font-weight="500">Nobel Prize: Medicine &amp; Physiology</text>
+  <text x="30" y="382" font-family="'DM Mono', monospace" font-size="10.5" fill="#8eb69b" letter-spacing="0.16em">ARTICLE 03 · CHIRAG RAJPAROHIT</text>
+</svg>
